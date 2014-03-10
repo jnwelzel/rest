@@ -12,8 +12,8 @@ import javax.persistence.Id;
  * @author jwelzel
  * 
  */
-@Entity
-public class User extends Bean<Long> {
+@Entity(name = "APP_USER")
+public class User extends BaseEntity<Long> {
 
     private static final long serialVersionUID = 1L;
 

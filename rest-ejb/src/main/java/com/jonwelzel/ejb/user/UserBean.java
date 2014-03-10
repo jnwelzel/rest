@@ -16,16 +16,14 @@ import com.jonwelzel.persistence.entities.User;
  */
 @Stateless(mappedName = "UserBean")
 @LocalBean
-public class UserBean implements UserLocalBusiness {
+public class UserBean {
 
-    @Override
     public List<User> findAll() {
         System.out.println("Finding all users");
         // TODO Auto-generated method stub
         return new ArrayList<User>();
     }
 
-    @Override
     public User findUser(Long id) {
         System.out.println("Finding user with \"id\" " + id);
         // TODO Auto-generated method stub

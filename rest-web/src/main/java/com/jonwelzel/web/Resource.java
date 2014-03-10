@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.ws.rs.PathParam;
 
-import com.jonwelzel.persistence.entities.Bean;
+import com.jonwelzel.persistence.entities.BaseEntity;
 
 /**
  * Base interface defining core methods for resources.
@@ -17,7 +17,7 @@ import com.jonwelzel.persistence.entities.Bean;
  * @param <T>
  *            Type of the resource.
  */
-public interface Resource<PK extends Serializable, T extends Bean<PK>> {
+public interface Resource<PK extends Serializable, T extends BaseEntity<PK>> {
 
     public List<T> getResources();
 

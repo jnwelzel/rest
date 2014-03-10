@@ -20,7 +20,7 @@ import javax.persistence.Version;
  *            The type of the primary key, which must be serializable.
  */
 @MappedSuperclass
-public abstract class Bean<PK extends Serializable> implements Serializable {
+public abstract class BaseEntity<PK extends Serializable> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -34,11 +34,11 @@ public abstract class Bean<PK extends Serializable> implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 
-    public Bean(PK id, Long version) {
+    public BaseEntity(PK id, Long version) {
         this.version = version;
     }
 
-    public Bean() {
+    public BaseEntity() {
     }
 
     public abstract PK getId();
@@ -90,7 +90,7 @@ public abstract class Bean<PK extends Serializable> implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        Bean<PK> other = (Bean<PK>) obj;
+        BaseEntity<PK> other = (BaseEntity<PK>) obj;
         if (getId() == null) {
             if (other.getId() != null) {
                 return false;

@@ -10,12 +10,12 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 
-import com.jonwelzel.ejb.user.UserLocalBusiness;
+import com.jonwelzel.ejb.user.UserBean;
 import com.jonwelzel.persistence.entities.User;
 import com.jonwelzel.util.MediaType;
 
 /**
- * {@link User} resource.
+ * Restful resource for {@link User}.
  * 
  * @author jwelzel
  * 
@@ -26,7 +26,7 @@ import com.jonwelzel.util.MediaType;
 public class UserResource implements Resource<Long, User> {
 
     @Inject
-    private UserLocalBusiness userBean;
+    private UserBean userBean;
 
     @Override
     @GET

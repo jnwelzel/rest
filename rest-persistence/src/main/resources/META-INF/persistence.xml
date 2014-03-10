@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <persistence xmlns="http://java.sun.com/xml/ns/persistence" version="2.0">
 
-    <persistence-unit name="testPU" transaction-type="JTA">
-      <jta-data-source>java:jboss/datasources/ExampleDS</jta-data-source>
-    </persistence-unit>
+    <persistence-unit name="javaDB" transaction-type="JTA"> 
+	   	<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider> 
+	   	<properties> 
+	      	 <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/> 
+	      	 <property name="eclipselink.target-database" value="PostgreSQL" />
+	      	 <property name="eclipselink.logging.level" value="INFO" />
+	      	 <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/api" />
+	      	 <property name="javax.persistence.jdbc.user" value="postgres" />
+        	 <property name="javax.persistence.jdbc.password" value="laranja87" />
+	      	 <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/> 
+	   	</properties> 
+	   	
+	   	<class>com.jonwelzel.persistence.entities.User</class>
+	   	
+	</persistence-unit>
 
 </persistence>
