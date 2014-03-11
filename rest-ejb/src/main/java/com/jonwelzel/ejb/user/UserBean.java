@@ -5,6 +5,9 @@ import java.util.List;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
+
+import org.slf4j.Logger;
 
 import com.jonwelzel.persistence.entities.User;
 
@@ -18,14 +21,17 @@ import com.jonwelzel.persistence.entities.User;
 @LocalBean
 public class UserBean {
 
+    @Inject
+    Logger log;
+
     public List<User> findAll() {
-        System.out.println("Finding all users");
+        log.info("Finding all users");
         // TODO Auto-generated method stub
         return new ArrayList<User>();
     }
 
     public User findUser(Long id) {
-        System.out.println("Finding user with \"id\" " + id);
+        log.info("Finding user with \"id\" " + id);
         // TODO Auto-generated method stub
         return null;
     }
