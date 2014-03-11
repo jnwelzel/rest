@@ -1,4 +1,4 @@
-package com.jonwelzel.persistence.dao.generic;
+package com.jonwelzel.persistence.dao.user;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -7,8 +7,15 @@ import javax.inject.Named;
 import javax.persistence.EntityManager;
 
 import com.jonwelzel.persistence.Database;
+import com.jonwelzel.persistence.dao.generic.AbstractGenericDao;
 import com.jonwelzel.persistence.entities.User;
 
+/**
+ * DAO for {@link User}.
+ * 
+ * @author jwelzel
+ * 
+ */
 @Stateless
 @LocalBean
 @Named

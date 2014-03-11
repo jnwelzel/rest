@@ -28,7 +28,7 @@ public abstract class AbstractGenericDao<PK extends Serializable, T extends Base
     public abstract EntityManager getEntityManager();
 
     @SuppressWarnings("unchecked")
-    public Class<T> getClazz() {
+    public Class<T> getEntityClass() {
         if (clazz == null) {
             clazz = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1];
         }
@@ -52,7 +52,7 @@ public abstract class AbstractGenericDao<PK extends Serializable, T extends Base
 
     @Override
     public List<T> findAll() {
-        TypedQuery<T> q = getEntityManager().createQuery("select e from " + getClazz().getSimpleName() + " e", clazz);
+        TypedQuery<T> q = getEntityManager().createQuery("select e from " + getEntityClass().getSimpleName() + " e", clazz);
         return q.getResultList();
     }
 

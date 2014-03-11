@@ -9,7 +9,7 @@ import javax.inject.Inject;
 
 import org.slf4j.Logger;
 
-import com.jonwelzel.persistence.dao.generic.UserDao;
+import com.jonwelzel.persistence.dao.user.UserDao;
 import com.jonwelzel.persistence.entities.User;
 
 /**
@@ -23,19 +23,14 @@ import com.jonwelzel.persistence.entities.User;
 public class UserBean {
 
     @Inject
-    Logger log;
+    private Logger log;
 
     @Inject
-    UserDao userDao;
-
-    // @Inject
-    // AbstractGenericDao<Long, User> genericDao;
+    private UserDao userDao;
 
     public List<User> findAll() {
         log.info("Finding all users");
         userDao.findAll();
-        // TODO Auto-generated method stub
-        // genericDao.findAll();
         return new ArrayList<User>();
     }
 
@@ -45,4 +40,8 @@ public class UserBean {
         return null;
     }
 
+    public User createUser(User user) {
+        log.info("Creating a new user");
+        return userDao.save(user);
+    }
 }
