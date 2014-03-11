@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 /**
  * Application user.
@@ -13,7 +14,8 @@ import javax.persistence.SequenceGenerator;
  * @author jwelzel
  * 
  */
-@Entity(name = "APP_USER")
+@Entity
+@Table(name = "APP_USER")
 public class User extends BaseEntity<Long> {
 
     private static final long serialVersionUID = 1L;

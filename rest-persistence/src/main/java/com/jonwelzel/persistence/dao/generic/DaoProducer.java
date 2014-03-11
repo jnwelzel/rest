@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-import javax.enterprise.context.Dependent;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.Bean;
@@ -19,7 +18,6 @@ public class DaoProducer implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Produces
-    @Dependent
     @Dao
     public <ID extends Serializable, T extends BaseEntity<ID>> GenericDao<ID, T> produce(InjectionPoint ip,
             BeanManager bm) {

@@ -9,6 +9,7 @@ import javax.inject.Inject;
 
 import org.slf4j.Logger;
 
+import com.jonwelzel.persistence.dao.generic.UserDao;
 import com.jonwelzel.persistence.entities.User;
 
 /**
@@ -24,8 +25,12 @@ public class UserBean {
     @Inject
     Logger log;
 
+    @Inject
+    UserDao userDao;
+
     public List<User> findAll() {
         log.info("Finding all users");
+        userDao.findAll();
         // TODO Auto-generated method stub
         return new ArrayList<User>();
     }
