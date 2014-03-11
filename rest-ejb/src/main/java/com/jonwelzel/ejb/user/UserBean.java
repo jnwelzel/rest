@@ -9,7 +9,7 @@ import javax.ejb.Stateless;
 import com.jonwelzel.persistence.entities.User;
 
 /**
- * Implementation of the {@link User} business definitions.
+ * {@link User} EJB.
  * 
  * @author jwelzel
  * 

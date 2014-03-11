@@ -66,7 +66,7 @@ public abstract class BaseEntity<PK extends Serializable> implements Serializabl
 
     @Override
     public String toString() {
-        return "Bean [id=" + getId() + ", version=" + version + "]";
+        return "Entity [id=" + getId() + ", version=" + version + "]";
     }
 
     @Override
