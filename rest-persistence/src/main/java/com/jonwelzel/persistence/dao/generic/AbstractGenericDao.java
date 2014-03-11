@@ -4,17 +4,14 @@ import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
-import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
-import javax.inject.Named;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import com.jonwelzel.persistence.entities.BaseEntity;
 
 /**
- * Implementation of a generic DAO.
+ * Abstract implementation of a generic DAO. Not to be used by itself (standalone) because it does not contain an
+ * {@link EntityManager} object, which is supposed to be provided by the concrete class through injection only.
  * 
  * @author jwelzel
  * 
@@ -23,27 +20,17 @@ import com.jonwelzel.persistence.entities.BaseEntity;
  * @param <T>
  *            The type of the object that will be manipulated by the DAO.
  */
-@Stateless
-@Named("GenericDao")
-@LocalBean
-public class GenericDaoImpl<PK extends Serializable, T extends BaseEntity<PK>> implements GenericDao<PK, T> {
+public abstract class AbstractGenericDao<PK extends Serializable, T extends BaseEntity<PK>> implements
+        GenericDao<PK, T> {
 
-    @PersistenceContext
-    private EntityManager entityManager;
     private Class<T> clazz;
 
-    public EntityManager getEntityManager() {
-        return entityManager;
-    }
-
-    public void setEntityManager(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
+    public abstract EntityManager getEntityManager();
 
     @SuppressWarnings("unchecked")
     public Class<T> getClazz() {
         if (clazz == null) {
-            clazz = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+            clazz = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1];
         }
         return clazz;
     }
@@ -65,19 +52,19 @@ public class GenericDaoImpl<PK extends Serializable, T extends BaseEntity<PK>> i
 
     @Override
     public List<T> findAll() {
-        TypedQuery<T> q = entityManager.createQuery("select e from " + clazz.getSimpleName() + " e", clazz);
+        TypedQuery<T> q = getEntityManager().createQuery("select e from " + getClazz().getSimpleName() + " e", clazz);
         return q.getResultList();
     }
 
     @Override
     public T find(PK id) {
-        return entityManager.getReference(clazz, id);
+        return getEntityManager().getReference(clazz, id);
     }
 
     @Override
     public void remove(T t) {
-        t = entityManager.getReference(clazz, t.getId());
-        entityManager.remove(t);
+        t = getEntityManager().getReference(clazz, t.getId());
+        getEntityManager().remove(t);
     }
 
     /**
@@ -87,7 +74,7 @@ public class GenericDaoImpl<PK extends Serializable, T extends BaseEntity<PK>> i
      * @return
      */
     protected T persist(T t) {
-        entityManager.persist(t);
+        getEntityManager().persist(t);
         return t;
     }
 
@@ -98,7 +85,7 @@ public class GenericDaoImpl<PK extends Serializable, T extends BaseEntity<PK>> i
      * @return
      */
     protected T update(T t) {
-        return entityManager.merge(t);
+        return getEntityManager().merge(t);
     }
 
 }

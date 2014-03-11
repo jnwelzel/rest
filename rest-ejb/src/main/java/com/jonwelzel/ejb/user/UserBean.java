@@ -28,10 +28,14 @@ public class UserBean {
     @Inject
     UserDao userDao;
 
+    // @Inject
+    // AbstractGenericDao<Long, User> genericDao;
+
     public List<User> findAll() {
         log.info("Finding all users");
         userDao.findAll();
         // TODO Auto-generated method stub
+        // genericDao.findAll();
         return new ArrayList<User>();
     }
 
