@@ -6,6 +6,7 @@ import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -32,18 +33,15 @@ public class UserResource implements Resource<Long, User> {
     @Override
     @GET
     public List<User> getResources() {
-        List<User> users = userBean.findAll();
-        users.add(new User(1L, "João da Conceição"));
-        users.add(new User(2L, "Damião da Silva"));
-        return users;
+        return userBean.findAll();
     }
 
     @Override
     @GET
     @Path("{id}")
     public User getResource(@PathParam("id") Long id) {
-        // TODO Auto-generated method stub
-        return null;
+        // TODO Tratar com um 404 NOT FOUND caso n exista User com id passado
+        return userBean.findUser(id);
     }
 
     @Override
@@ -53,8 +51,8 @@ public class UserResource implements Resource<Long, User> {
     }
 
     @Override
-    public User updateResource(User resouce) {
-        // TODO Auto-generated method stub
-        return null;
+    @PUT
+    public User updateResource(User resource) {
+        return userBean.updateUser(resource);
     }
 }

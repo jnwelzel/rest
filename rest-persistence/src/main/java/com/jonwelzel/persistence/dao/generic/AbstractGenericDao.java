@@ -10,7 +10,7 @@ import javax.persistence.TypedQuery;
 import com.jonwelzel.persistence.entities.BaseEntity;
 
 /**
- * Abstract implementation of a generic DAO. Not to be used by itself (standalone) because it does not contain an
+ * Abstract implementation of {@link GenericDao}. Not to be used by itself (standalone) because it does not contain an
  * {@link EntityManager} object, which is supposed to be provided by the concrete class through injection only.
  * 
  * @author jwelzel
@@ -52,13 +52,14 @@ public abstract class AbstractGenericDao<PK extends Serializable, T extends Base
 
     @Override
     public List<T> findAll() {
-        TypedQuery<T> q = getEntityManager().createQuery("select e from " + getEntityClass().getSimpleName() + " e", clazz);
+        TypedQuery<T> q = getEntityManager().createQuery("select e from " + getEntityClass().getSimpleName() + " e",
+                clazz);
         return q.getResultList();
     }
 
     @Override
     public T find(PK id) {
-        return getEntityManager().getReference(clazz, id);
+        return id != null ? getEntityManager().getReference(clazz, id) : null;
     }
 
     @Override

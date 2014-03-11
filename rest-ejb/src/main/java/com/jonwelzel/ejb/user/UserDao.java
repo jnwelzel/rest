@@ -1,12 +1,9 @@
-package com.jonwelzel.persistence.dao.user;
+package com.jonwelzel.ejb.user;
 
-import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
-import javax.inject.Inject;
-import javax.inject.Named;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
-import com.jonwelzel.persistence.Database;
 import com.jonwelzel.persistence.dao.generic.AbstractGenericDao;
 import com.jonwelzel.persistence.entities.User;
 
@@ -17,12 +14,9 @@ import com.jonwelzel.persistence.entities.User;
  * 
  */
 @Stateless
-@LocalBean
-@Named
 public class UserDao extends AbstractGenericDao<Long, User> {
 
-    @Inject
-    @Database
+    @PersistenceContext(unitName = "rest")
     private EntityManager entityManager;
 
     @Override
