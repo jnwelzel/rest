@@ -59,7 +59,7 @@ public abstract class AbstractGenericDao<PK extends Serializable, T extends Base
 
     @Override
     public T find(PK id) {
-        return id != null ? getEntityManager().getReference(clazz, id) : null;
+        return id != null ? getEntityManager().find(clazz, id) : null;
     }
 
     @Override
@@ -69,7 +69,7 @@ public abstract class AbstractGenericDao<PK extends Serializable, T extends Base
     }
 
     /**
-     * Persist new itens in database.
+     * Persist new items in database.
      * 
      * @param t
      * @return
@@ -80,7 +80,7 @@ public abstract class AbstractGenericDao<PK extends Serializable, T extends Base
     }
 
     /**
-     * Update itens on database.
+     * Update items on database.
      * 
      * @param t
      * @return

@@ -29,6 +29,7 @@ public abstract class BaseEntity<PK extends Serializable> implements Serializabl
     private Long version;
 
     @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false, updatable = false, insertable = true)
     private Date createdAt;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -51,6 +52,22 @@ public abstract class BaseEntity<PK extends Serializable> implements Serializabl
 
     public void setVersion(Long version) {
         this.version = version;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     @PrePersist
