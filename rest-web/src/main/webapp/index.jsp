@@ -7,7 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>rest <%=Version.VALUE%></title>
 </head>
-  <link rel="stylesheet" href="resources/css/styles.css" />
+  <link rel="stylesheet" href="assets/css/styles.css" />
   <style type="text/css">
     body {
       padding-top: 60px;
@@ -44,6 +44,6 @@
 	<!-- Using a CDN to get jQuery, as eclipse doesn't like it very much 
 	     and finds some JavaScript validation errors -->
 	<script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
-    <script src="resources/js/bootstrap-alert.js"></script>
+    <script src="assets/js/bootstrap-alert.js"></script>
 </body>
 </html>
