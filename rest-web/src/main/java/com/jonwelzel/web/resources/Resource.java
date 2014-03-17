@@ -53,4 +53,12 @@ public interface Resource<PK extends Serializable, T extends BaseEntity<PK>> {
      */
     public T updateResource(T resouce);
 
+    /**
+     * Delete the resource from the database.
+     * 
+     * @param resource
+     *            The record to be deleted.
+     */
+    public void deleteResource(T resource);
+
 }

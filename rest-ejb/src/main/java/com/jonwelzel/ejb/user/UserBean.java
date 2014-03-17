@@ -46,4 +46,9 @@ public class UserBean {
         log.info("Updating user \"" + user.getName() + "\"");
         return userDao.save(user);
     }
+
+    public void deleteUser(User user) {
+        log.info("Deleting user \"" + user.getName() + "\"");
+        userDao.remove(user);
+    }
 }

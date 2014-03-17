@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -54,5 +55,11 @@ public class UserResource implements Resource<Long, User> {
     @PUT
     public User updateResource(User resource) {
         return userBean.updateUser(resource);
+    }
+
+    @Override
+    @DELETE
+    public void deleteResource(User resource) {
+        userBean.deleteUser(resource);
     }
 }
