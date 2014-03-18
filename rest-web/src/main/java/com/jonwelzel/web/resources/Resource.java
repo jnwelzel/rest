@@ -3,8 +3,6 @@ package com.jonwelzel.web.resources;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.ws.rs.PathParam;
-
 import com.jonwelzel.persistence.entities.BaseEntity;
 
 /**
@@ -33,7 +31,7 @@ public interface Resource<PK extends Serializable, T extends BaseEntity<PK>> {
      *            The resource id type.
      * @return A single record if found with id, or null if none found.
      */
-    public T getResource(@PathParam("id") PK id);
+    public T getResource(PK id);
 
     /**
      * Create a new record of the {@linkplain T} resource type.
@@ -42,7 +40,7 @@ public interface Resource<PK extends Serializable, T extends BaseEntity<PK>> {
      *            The object containing the resource data that will be created.
      * @return The freshly saved resource object.
      */
-    public T createResource(T resouce);
+    public T createResource(T resource);
 
     /**
      * Update the existing record of this resource.
@@ -51,14 +49,14 @@ public interface Resource<PK extends Serializable, T extends BaseEntity<PK>> {
      *            The object containing the data that will be updated.
      * @return The freshly updated resource object.
      */
-    public T updateResource(T resouce);
+    public T updateResource(T resource);
 
     /**
      * Delete the resource from the database.
      * 
-     * @param resource
-     *            The record to be deleted.
+     * @param id
+     *            The id of the record to be deleted.
      */
-    public void deleteResource(T resource);
+    public void deleteResource(PK id);
 
 }

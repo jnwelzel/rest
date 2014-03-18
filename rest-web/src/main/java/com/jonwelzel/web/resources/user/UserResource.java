@@ -59,7 +59,8 @@ public class UserResource implements Resource<Long, User> {
 
     @Override
     @DELETE
-    public void deleteResource(User resource) {
-        userBean.deleteUser(resource);
+    @Path("{id}")
+    public void deleteResource(@PathParam("id") Long id) {
+        userBean.deleteUser(id);
     }
 }

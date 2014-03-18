@@ -63,8 +63,8 @@ public abstract class AbstractGenericDao<PK extends Serializable, T extends Base
     }
 
     @Override
-    public void remove(T t) {
-        t = getEntityManager().getReference(clazz, t.getId());
+    public void remove(PK id) {
+        T t = getEntityManager().getReference(clazz, id);
         getEntityManager().remove(t);
     }
 

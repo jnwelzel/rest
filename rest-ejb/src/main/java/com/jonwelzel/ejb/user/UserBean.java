@@ -33,7 +33,7 @@ public class UserBean {
     }
 
     public User findUser(Long id) {
-        log.info("Finding user with \"id\" " + id);
+        log.info("Finding user with id \"" + id + "\"");
         return userDao.find(id);
     }
 
@@ -47,8 +47,8 @@ public class UserBean {
         return userDao.save(user);
     }
 
-    public void deleteUser(User user) {
-        log.info("Deleting user \"" + user.getName() + "\"");
-        userDao.remove(user);
+    public void deleteUser(Long id) {
+        log.info("Deleting user with id \"" + id + "\"");
+        userDao.remove(id);
     }
 }

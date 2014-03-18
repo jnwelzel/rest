@@ -47,7 +47,7 @@ public interface GenericDao<PK extends Serializable, T extends BaseEntity<PK>> {
      * @param t
      *            item to delete.
      */
-    public void remove(T t);
+    public void remove(PK id);
 
     public void setClazz(Class<T> clazz);
 
