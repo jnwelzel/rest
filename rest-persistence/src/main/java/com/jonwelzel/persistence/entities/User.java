@@ -1,32 +1,56 @@
 package com.jonwelzel.persistence.entities;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
- * Application user.
+ * Application user model/pojo.
  * 
  * @author jwelzel
  * 
  */
 @Entity
 @Table(name = "APP_USER")
-public class User extends BaseEntity<Long> {
+public class User extends AbstractEntity<Long> {
 
     private static final long serialVersionUID = 1L;
 
     @Id
     @SequenceGenerator(name = "app_user_seq", allocationSize = 1, initialValue = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "app_user_seq")
+    @Column(name = "ID")
     private Long id;
 
     @Column(length = 128, nullable = false)
     private String name;
+
+    @Column(length = 128, nullable = false)
+    private String lastName;
+
+    @Column(length = 80, nullable = false, unique = true)
+    private String email;
+
+    @Column(nullable = false)
+    private String password;
+
+    @ManyToMany(mappedBy = "users")
+    private List<Company> companies;
+
+    @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
+    @JoinTable(name = "USER_TOKEN", joinColumns = { @JoinColumn(name = "USER_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "TOKEN_ID", referencedColumnName = "ID") })
+    private AuthToken authToken;
 
     public User() {
     }
@@ -52,6 +76,46 @@ public class User extends BaseEntity<Long> {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public List<Company> getCompanies() {
+        return companies;
+    }
+
+    public void setCompanies(List<Company> companies) {
+        this.companies = companies;
+    }
+
+    public AuthToken getAuthToken() {
+        return authToken;
+    }
+
+    public void setAuthToken(AuthToken authToken) {
+        this.authToken = authToken;
     }
 
     @Override

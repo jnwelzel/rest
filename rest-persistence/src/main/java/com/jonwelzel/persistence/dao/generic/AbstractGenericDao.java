@@ -7,7 +7,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
-import com.jonwelzel.persistence.entities.BaseEntity;
+import com.jonwelzel.persistence.entities.AbstractEntity;
 
 /**
  * Abstract implementation of {@link GenericDao}. Not to be used by itself (standalone) because it does not contain an
@@ -20,7 +20,7 @@ import com.jonwelzel.persistence.entities.BaseEntity;
  * @param <T>
  *            The type of the object that will be manipulated by the DAO.
  */
-public abstract class AbstractGenericDao<PK extends Serializable, T extends BaseEntity<PK>> implements
+public abstract class AbstractGenericDao<PK extends Serializable, T extends AbstractEntity<PK>> implements
         GenericDao<PK, T> {
 
     private Class<T> clazz;

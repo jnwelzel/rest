@@ -3,7 +3,7 @@ package com.jonwelzel.persistence.dao.generic;
 import java.io.Serializable;
 import java.util.List;
 
-import com.jonwelzel.persistence.entities.BaseEntity;
+import com.jonwelzel.persistence.entities.AbstractEntity;
 
 /**
  * DAO interface that defines the basic CRUD operations.
@@ -15,7 +15,7 @@ import com.jonwelzel.persistence.entities.BaseEntity;
  * @param <T>
  *            The type of the object that will be manipulated by the DAO.
  */
-public interface GenericDao<PK extends Serializable, T extends BaseEntity<PK>> {
+public interface GenericDao<PK extends Serializable, T extends AbstractEntity<PK>> {
 
     /**
      * Persist the given entity using the EntityManager.

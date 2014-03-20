@@ -28,6 +28,10 @@
 		</plugins>
 	</build>
 	<dependencies>
+		<dependency>
+			<groupId>com.jonwelzel</groupId>
+			<artifactId>rest-commons</artifactId>
+		</dependency>
 		<!-- Compile scope dependencies -->
 		<dependency>
 			<groupId>org.apache.commons</groupId>

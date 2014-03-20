@@ -3,7 +3,7 @@ package com.jonwelzel.web.resources;
 import java.io.Serializable;
 import java.util.List;
 
-import com.jonwelzel.persistence.entities.BaseEntity;
+import com.jonwelzel.persistence.entities.AbstractEntity;
 
 /**
  * Base interface defining core methods for resources.
@@ -15,7 +15,7 @@ import com.jonwelzel.persistence.entities.BaseEntity;
  * @param <T>
  *            Type of the resource.
  */
-public interface Resource<PK extends Serializable, T extends BaseEntity<PK>> {
+public interface Resource<PK extends Serializable, T extends AbstractEntity<PK>> {
 
     /**
      * Retrieve all records of the {@linkplain T} resource type.
