@@ -1,0 +1,43 @@
+<ol class="breadcrumb">
+  <li><a href="#home">Home</a></li>
+  <li class="active">Sign Up</li>
+</ol>
+
+<h1>New User</h1>
+<hr/>
+
+<form class="form-horizontal" role="form">
+  <div class="form-group">
+    <label for="inputName" class="col-xs-2 control-label">Name</label>
+    <div class="col-xs-4">
+      <input class="form-control" id="inputName" placeholder="Name" required ng-model="user.name" autofocus>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="inputLastName" class="col-xs-2 control-label">Last name</label>
+    <div class="col-xs-4">
+      <input class="form-control" id="inputLastName" placeholder="Last name" required ng-model="user.lastName">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="inputEmail" class="col-xs-2 control-label">Email</label>
+    <div class="col-xs-4">
+      <input type="email" class="form-control" id="inputEmail" placeholder="Email" required ng-model="user.email">
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <label for="inputPassword" class="col-xs-2 control-label">Password</label>
+    <div class="col-xs-4">
+      <input type="password" class="form-control" id="inputPassword" placeholder="Password" required ng-model="user.password">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button class="btn btn-lg btn-primary" ng-click="signUp(user)">Sign up</button>
+    </div>
+  </div>
+</form>

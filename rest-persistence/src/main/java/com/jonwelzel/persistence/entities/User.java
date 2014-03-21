@@ -14,6 +14,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * Application user model/pojo.
@@ -42,13 +43,16 @@ public class User extends AbstractEntity<Long> {
     @Column(length = 80, nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
+    @Transient
     private String password;
+
+    @Column(nullable = false)
+    private String passwordHash;
 
     @ManyToMany(mappedBy = "users")
     private List<Company> companies;
 
-    @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
+    @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.REMOVE }, optional = false, orphanRemoval = true)
     @JoinTable(name = "USER_TOKEN", joinColumns = { @JoinColumn(name = "USER_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "TOKEN_ID", referencedColumnName = "ID") })
     private AuthToken authToken;
 
@@ -116,6 +120,14 @@ public class User extends AbstractEntity<Long> {
 
     public void setAuthToken(AuthToken authToken) {
         this.authToken = authToken;
+    }
+
+    public String getPasswordHash() {
+        return passwordHash;
+    }
+
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
     }
 
     @Override

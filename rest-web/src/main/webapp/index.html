@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Identity Management</title>
+  <title>Identity Manager</title>
   <link rel="stylesheet" href="assets/css/app.css"/>
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
@@ -24,8 +24,8 @@
       </div>
       <div class="navbar-collapse collapse">
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="#"><i class="fa fa-sign-in"></i> Sign In</a></li>
-          <li><a href="#"><i class="fa fa-user"></i> Sign Up</a></li>
+          <li><a href="#login"><i class="fa fa-sign-in"></i> Log In</a></li>
+          <li><a href="#sign-up"><i class="fa fa-user"></i> Sign Up</a></li>
           <li><a href="https://github.com/jnwelzel/rest" target="new" title="Source code on Github"><i class="fa fa-github"></i> Sawce</a></li>
         </ul>
       </div>
@@ -33,7 +33,7 @@
   </div>
 
   <!-- Placeholder for views -->
-  <div class="container" ng-view>User(s): {{users.length}}</div>
+  <div class="container" ng-view></div>
 
   <div id="footer">
     <div class="container">
@@ -43,8 +43,8 @@
 
   <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.14/angular.min.js"></script>
-  <script src="assets/js/angular/angular-route.min.js"></script>
-  <script src="assets/js/angular/angular-resource.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.14/angular-route.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.14/angular-resource.min.js"></script>
   <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
   <script src="assets/js/app.js"></script>
   <script src="assets/js/services.js"></script>

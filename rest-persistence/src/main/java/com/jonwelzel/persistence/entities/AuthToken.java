@@ -22,8 +22,11 @@ public class AuthToken extends AbstractEntity<String> {
     @Column(name = "ID", length = 40)
     private String id;
 
-    @OneToOne(mappedBy = "authToken")
+    @OneToOne(mappedBy = "authToken", optional = false)
     private User user;
+
+    public AuthToken() {
+    }
 
     @Override
     public String getId() {

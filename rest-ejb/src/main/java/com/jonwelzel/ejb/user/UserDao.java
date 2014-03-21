@@ -1,6 +1,7 @@
 package com.jonwelzel.ejb.user;
 
 import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -9,7 +10,7 @@ import javax.persistence.PersistenceContext;
 
 import org.slf4j.Logger;
 
-import com.jonwelzel.persistence.dao.generic.AbstractGenericDao;
+import com.jonwelzel.persistence.dao.generic.AbstractJpaDao;
 import com.jonwelzel.persistence.entities.AuthToken;
 import com.jonwelzel.persistence.entities.User;
 import com.jonwelzel.util.Security;
@@ -21,7 +22,7 @@ import com.jonwelzel.util.Security;
  * 
  */
 @Stateless
-public class UserDao extends AbstractGenericDao<Long, User> {
+public class UserDao extends AbstractJpaDao<Long, User> {
 
     @Inject
     private Logger log;
@@ -39,11 +40,13 @@ public class UserDao extends AbstractGenericDao<Long, User> {
         AuthToken token = new AuthToken();
         try {
             token.setId(Security.generateSecureHex());
-            token.setUser(t);
+            t.setAuthToken(token);
+            t.setPasswordHash(Security.createHash(t.getPassword()));
         } catch (NoSuchAlgorithmException e) {
             log.error("The \"SHA1\" encryption algorithm needed for the user's authentication token creation could not be found.");
+        } catch (InvalidKeySpecException e) {
+            log.error("Could not generate user password hash because the provided \"PBKDF2WithHmacSHA1\" key specification is invalid.");
         }
-        t.setAuthToken(token);
         return super.persist(t);
     }
 

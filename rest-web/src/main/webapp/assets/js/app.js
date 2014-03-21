@@ -10,6 +10,8 @@ angular.module('ngIdentity', [
   'ngIdentity.controllers'
 ]).
 config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/', {templateUrl: 'index.html', controller: 'IndexController'});
-  $routeProvider.otherwise({redirectTo: '/'});
+  $routeProvider.when('/home', {templateUrl: 'partials/home.html', controller: 'HomeController'});
+  $routeProvider.when('/login', {templateUrl: 'partials/login.html', controller: 'LoginController'});
+  $routeProvider.when('/sign-up', {templateUrl: 'partials/sign_up.html', controller: 'SignUpController'});
+  $routeProvider.otherwise({redirectTo: '/home'});
 }]);
