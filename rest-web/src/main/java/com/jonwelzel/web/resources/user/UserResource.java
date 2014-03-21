@@ -11,10 +11,14 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import com.jonwelzel.ejb.user.UserBean;
 import com.jonwelzel.persistence.entities.User;
+import com.jonwelzel.util.SecurityUtils;
 import com.jonwelzel.web.resources.Resource;
 
 /**
@@ -62,5 +66,20 @@ public class UserResource implements Resource<Long, User> {
     @Path("{id}")
     public void deleteResource(@PathParam("id") Long id) {
         userBean.deleteUser(id);
+    }
+
+    @POST
+    @Path("/login")
+    public Response login(User user) {
+        System.out.println("Log in for user \"" + user.getEmail() + "\"");
+        User dbUser = userBean.findByEmail(user.getEmail());
+        if (dbUser == null) {
+            throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity("Invalid email address.")
+                    .build());
+        }
+        if (!SecurityUtils.validatePassword(user.getPassword(), dbUser.getPasswordHash())) {
+            throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity("Invalid password.").build());
+        }
+        return Response.status(Status.OK).entity(dbUser).build();
     }
 }

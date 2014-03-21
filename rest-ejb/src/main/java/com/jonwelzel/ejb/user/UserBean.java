@@ -51,4 +51,15 @@ public class UserBean {
         log.info("Deleting user with id \"" + id + "\"");
         userDao.remove(id);
     }
+
+    /**
+     * Find a {@link User} by its registered email address.
+     * 
+     * @param email
+     *            The user's email.
+     * @return The {@link User} object if found or null if no record was found.
+     */
+    public User findByEmail(String email) {
+        return userDao.findByEmail(email);
+    }
 }

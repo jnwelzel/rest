@@ -9,14 +9,18 @@ import java.security.spec.InvalidKeySpecException;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Utility class containing security-related methods.
  * 
  * @author jwelzel
  * 
  */
-public class Security {
+public class SecurityUtils {
 
+    private static Logger log = LoggerFactory.getLogger("SecurityUtils");
     private static SecureRandom secureGenerator;
 
     public static final String PBKDF2_ALGORITHM = "PBKDF2WithHmacSHA1";
@@ -114,8 +118,7 @@ public class Security {
      *            the hash of the valid password
      * @return true if the password is correct, false if not
      */
-    public static boolean validatePassword(String password, String correctHash) throws NoSuchAlgorithmException,
-            InvalidKeySpecException {
+    public static boolean validatePassword(String password, String correctHash) {
         return validatePassword(password.toCharArray(), correctHash);
     }
 
@@ -128,8 +131,7 @@ public class Security {
      *            the hash of the valid password
      * @return true if the password is correct, false if not
      */
-    public static boolean validatePassword(char[] password, String correctHash) throws NoSuchAlgorithmException,
-            InvalidKeySpecException {
+    public static boolean validatePassword(char[] password, String correctHash) {
         // Decode the hash into its parameters
         String[] params = correctHash.split(":");
         int iterations = Integer.parseInt(params[ITERATION_INDEX]);
@@ -140,7 +142,7 @@ public class Security {
         byte[] testHash = pbkdf2(password, salt, iterations, hash.length);
         // Compare the hashes in constant time. The password is correct if
         // both hashes match.
-        return slowEquals(hash, testHash);
+        return testHash != null ? slowEquals(hash, testHash) : false;
     }
 
     /**
@@ -172,13 +174,21 @@ public class Security {
      *            the iteration count (slowness factor)
      * @param bytes
      *            the length of the hash to compute in bytes
-     * @return the PBDKF2 hash of the password
+     * @return the PBDKF2 hash of the password or null if any errors occur
      */
-    private static byte[] pbkdf2(char[] password, byte[] salt, int iterations, int bytes)
-            throws NoSuchAlgorithmException, InvalidKeySpecException {
+    private static byte[] pbkdf2(char[] password, byte[] salt, int iterations, int bytes) {
         PBEKeySpec spec = new PBEKeySpec(password, salt, iterations, bytes * 8);
-        SecretKeyFactory skf = SecretKeyFactory.getInstance(PBKDF2_ALGORITHM);
-        return skf.generateSecret(spec).getEncoded();
+        SecretKeyFactory skf;
+        byte[] result = null;
+        try {
+            skf = SecretKeyFactory.getInstance(PBKDF2_ALGORITHM);
+            result = skf.generateSecret(spec).getEncoded();
+        } catch (NoSuchAlgorithmException e) {
+            log.error("The \"PBKDF2WithHmacSHA1\" encryption algorithm needed to compute the hash could not be found.");
+        } catch (InvalidKeySpecException e) {
+            log.error("Could not generate hash because the provided \"PBKDF2WithHmacSHA1\" key specification is invalid.");
+        }
+        return result;
     }
 
     /**
