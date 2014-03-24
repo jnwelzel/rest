@@ -15,8 +15,15 @@ angular.module('ngIdentity.services', ['ngResource'])
         find: {method: 'GET', params: {id: 'id'}},
         update: {method: 'PUT', params: {id: 'id'}}
       });
-    }])
+    }]
+  )
   .factory('LogIn', ['$resource',
     function($resource) {
       return $resource(loginResource);
-    }]);
+    }]
+  )
+  .factory('Token', ['$window',
+    function($window) {
+      return 'lol';
+    }]
+  );

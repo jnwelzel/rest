@@ -20,14 +20,10 @@
   <div class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container">
       <div class="navbar-header">
-        <a class="navbar-brand" href="/rest">Identity Manager v0.1</a>
+        <a class="navbar-brand" href="/rest">Identity Manager v<span app-version></a>
       </div>
       <div class="navbar-collapse collapse">
-        <ul class="nav navbar-nav navbar-right">
-          <li><a href="#login"><i class="fa fa-sign-in"></i> Log In</a></li>
-          <li><a href="#sign-up"><i class="fa fa-user"></i> Sign Up</a></li>
-          <li><a href="https://github.com/jnwelzel/rest" target="new" title="Source code on Github"><i class="fa fa-github"></i> Sawce</a></li>
-        </ul>
+        <div session-info></div>
       </div>
     </div>
   </div>
@@ -45,6 +41,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.14/angular.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.14/angular-route.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.14/angular-resource.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.14/angular-cookies.min.js"></script>
   <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
   <script src="assets/js/app.js"></script>
   <script src="assets/js/services.js"></script>

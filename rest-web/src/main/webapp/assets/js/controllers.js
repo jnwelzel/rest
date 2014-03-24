@@ -13,7 +13,8 @@ angular.module('ngIdentity.controllers', [])
       $scope.master = angular.copy(user);
       LogIn.save(
         {}, $scope.master,
-        function() {
+        function(success) {
+          $window.sessionStorage.setItem('token', success.authToken.id);
           $window.alert('Successfully logged in.');
           $location.path('/home');
         },
@@ -22,6 +23,9 @@ angular.module('ngIdentity.controllers', [])
         }
       );
     };
+  }])
+  .controller('LogoutController', ['$window', function($window) {
+    $window.sessionStorage.removeItem('token');
   }])
   .controller('SignUpController', ['$scope', '$window', '$location', 'User', function($scope, $window, $location, User) {
     $scope.user = {};
