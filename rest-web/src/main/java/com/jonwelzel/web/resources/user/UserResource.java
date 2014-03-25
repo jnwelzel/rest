@@ -6,6 +6,7 @@ import javax.ejb.EJB;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -15,6 +16,9 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.jonwelzel.ejb.user.UserBean;
 import com.jonwelzel.persistence.entities.User;
@@ -32,20 +36,24 @@ import com.jonwelzel.web.resources.Resource;
 @Produces(MediaType.APPLICATION_JSON)
 public class UserResource implements Resource<Long, User> {
 
+    private Logger log = LoggerFactory.getLogger(getClass());
+
     @EJB
     private UserBean userBean;
 
     @Override
     @GET
-    public List<User> getResources() {
+    public List<User> getResources(@HeaderParam("authorization") String token) {
+        log.info("Authorization token: " + token);
         return userBean.findAll();
     }
 
     @Override
     @GET
     @Path("{id}")
-    public User getResource(@PathParam("id") Long id) {
+    public User getResource(@PathParam("id") Long id, @HeaderParam("authorization") String token) {
         // TODO Tratar com um 404 NOT FOUND caso n exista User com id passado
+        log.info("Authorization token: " + token);
         return userBean.findUser(id);
     }
 

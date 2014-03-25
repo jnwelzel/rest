@@ -22,7 +22,7 @@ public interface Resource<PK extends Serializable, T extends AbstractEntity<PK>>
      * 
      * @return A list containing all records found or an empty list if none were found.
      */
-    public List<T> getResources();
+    public List<T> getResources(String token);
 
     /**
      * Retrieve a single record of the {@linkplain T} resource type by its identification attribute.
@@ -31,7 +31,7 @@ public interface Resource<PK extends Serializable, T extends AbstractEntity<PK>>
      *            The resource id type.
      * @return A single record if found with id, or null if none found.
      */
-    public T getResource(PK id);
+    public T getResource(PK id, String token);
 
     /**
      * Create a new record of the {@linkplain T} resource type.

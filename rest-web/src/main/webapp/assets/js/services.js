@@ -22,12 +22,31 @@ angular.module('ngIdentity.services', ['ngResource'])
       return $resource(loginResource);
     }]
   )
+  .factory('authInterceptor', ['$rootScope', '$q', '$window', function($rootScope, $q, $window) {
+    return {
+      request: function (config) {
+        config.headers = config.headers || {};
+        if ($window.sessionStorage.token) {
+          config.headers.Authorization = 'Bearer ' + $window.sessionStorage.token;
+        }
+        return config;
+      },
+      response: function (response) {
+        if (response.status === 401) {
+          // handle the case where the user is not authenticated
+          console.log('401 Not Authorized');
+        }
+        return response || $q.when(response);
+      }
+    };
+  }]
+  )
   .service('TokenService', ['$window',
     function($window) {
       var tokenService = {
         getToken: function() {
           var token = $window.sessionStorage.getItem('token');
-          return token != null ? token : null;
+          return token || null;
         },
         setToken: function(token) {
           $window.sessionStorage.setItem('token', token);

@@ -10,10 +10,11 @@ angular.module('ngIdentity', [
   'ngIdentity.directives',
   'ngIdentity.controllers'
 ]).
-config(['$routeProvider', function($routeProvider) {
+config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvider) {
   $routeProvider.when('/home', {templateUrl: 'partials/home.html', controller: 'HomeController'});
   $routeProvider.when('/login', {templateUrl: 'partials/login.html', controller: 'LoginController'});
   $routeProvider.when('/logout', {controller: 'LogoutController'});
   $routeProvider.when('/sign-up', {templateUrl: 'partials/sign_up.html', controller: 'SignUpController'});
   $routeProvider.otherwise({redirectTo: '/home'});
+  $httpProvider.interceptors.push('authInterceptor');
 }]);
