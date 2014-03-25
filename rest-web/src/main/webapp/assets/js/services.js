@@ -22,8 +22,20 @@ angular.module('ngIdentity.services', ['ngResource'])
       return $resource(loginResource);
     }]
   )
-  .factory('Token', ['$window',
+  .service('TokenService', ['$window',
     function($window) {
-      return 'lol';
+      var tokenService = {
+        getToken: function() {
+          var token = $window.sessionStorage.getItem('token');
+          return token != null ? token : null;
+        },
+        setToken: function(token) {
+          $window.sessionStorage.setItem('token', token);
+        },
+        clearToken: function() {
+          $window.sessionStorage.removeItem('token');
+        }
+      };
+      return tokenService;
     }]
   );

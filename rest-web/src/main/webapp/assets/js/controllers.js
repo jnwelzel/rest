@@ -24,8 +24,23 @@ angular.module('ngIdentity.controllers', [])
       );
     };
   }])
-  .controller('LogoutController', ['$window', function($window) {
-    $window.sessionStorage.removeItem('token');
+  .controller('LogoutController', ['$scope', 'TokenService', '$window', '$location', function($scope, TokenService, $window, $location) {
+    $scope.logout = function() {
+      TokenService.clearToken();
+      $window.alert('Successfully logged out.');
+      $location.path('/home');
+    }
+  }])
+  .controller('SessionInfoController', ['$scope','TokenService', function($scope, TokenService) {
+    $scope.template = null;
+    $scope.$watch(
+      function() {
+        return TokenService.getToken();
+      },
+      function(token) {
+        $scope.template = token == null ? 'partials/_logged_out.html' : 'partials/_logged_in.html';
+      }
+    );
   }])
   .controller('SignUpController', ['$scope', '$window', '$location', 'User', function($scope, $window, $location, User) {
     $scope.user = {};
