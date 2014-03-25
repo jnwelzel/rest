@@ -22,8 +22,11 @@ import org.slf4j.LoggerFactory;
 
 import com.jonwelzel.ejb.user.UserBean;
 import com.jonwelzel.persistence.entities.User;
+import com.jonwelzel.persistence.enumerations.RoleType;
 import com.jonwelzel.util.SecurityUtils;
+import com.jonwelzel.web.annotations.Protected;
 import com.jonwelzel.web.resources.Resource;
+import com.jonwelzel.web.validation.TokenAuthValidation;
 
 /**
  * Restful resource for {@link User}.
@@ -43,6 +46,7 @@ public class UserResource implements Resource<Long, User> {
 
     @Override
     @GET
+    @Protected(validator = TokenAuthValidation.class, role = RoleType.USER)
     public List<User> getResources(@HeaderParam("authorization") String token) {
         log.info("Authorization token: " + token);
         return userBean.findAll();

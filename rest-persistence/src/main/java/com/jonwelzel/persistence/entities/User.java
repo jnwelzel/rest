@@ -1,10 +1,13 @@
 package com.jonwelzel.persistence.entities;
 
+import java.security.Principal;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,6 +21,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.jonwelzel.persistence.enumerations.RoleType;
+
 /**
  * Application user model/pojo.
  * 
@@ -27,7 +32,7 @@ import javax.persistence.Transient;
 @Entity
 @Table(name = "APP_USER")
 @NamedQueries(value = { @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = :email") })
-public class User extends AbstractEntity<Long> {
+public class User extends AbstractEntity<Long> implements Principal {
 
     private static final long serialVersionUID = 1L;
 
@@ -59,6 +64,10 @@ public class User extends AbstractEntity<Long> {
     @JoinTable(name = "USER_TOKEN", joinColumns = { @JoinColumn(name = "USER_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "TOKEN_ID", referencedColumnName = "ID") })
     private AuthToken authToken;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private RoleType role;
+
     public User() {
     }
 
@@ -77,6 +86,7 @@ public class User extends AbstractEntity<Long> {
         this.id = id;
     }
 
+    @Override
     public String getName() {
         return name;
     }
