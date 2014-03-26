@@ -85,7 +85,7 @@ public class SessionBean {
      *            Session unique identifier.
      * @return -1 if error occurred, 0 if no session was expired or 1 if all went well.
      */
-    public int expireSession(String key) {
+    public int destroySession(String key) {
         Jedis jedis = jedisFactory.getResource();
         int result = -1;
         try {

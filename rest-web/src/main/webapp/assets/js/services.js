@@ -3,7 +3,7 @@
 /* Services */
 
 var userResource = 'resources/users/:id';
-var loginResource = 'resources/users/login';
+var sessionResource = 'resources/session';
 
 // Demonstrate how to register services
 // In this case it is a simple value service.
@@ -17,17 +17,17 @@ angular.module('ngIdentity.services', ['ngResource'])
       });
     }]
   )
-  .factory('LogIn', ['$resource',
+  .factory('Session', ['$resource',
     function($resource) {
-      return $resource(loginResource);
+      return $resource(sessionResource);
     }]
   )
-  .factory('authInterceptor', ['$rootScope', '$q', '$window', function($rootScope, $q, $window) {
+  .factory('authInterceptor', ['$rootScope', '$q', '$window', 'TokenService', function($rootScope, $q, $window, TokenService) {
     return {
       request: function (config) {
         config.headers = config.headers || {};
         if ($window.sessionStorage.token) {
-          config.headers.Authorization = 'Bearer ' + $window.sessionStorage.token;
+          config.headers.Authorization = TokenService.getToken();
         }
         return config;
       },

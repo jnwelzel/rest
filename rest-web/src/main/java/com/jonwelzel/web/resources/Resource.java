@@ -6,7 +6,7 @@ import java.util.List;
 import com.jonwelzel.persistence.entities.AbstractEntity;
 
 /**
- * Base interface defining core methods for resources.
+ * Base interface that defines core methods for persistent resources.
  * 
  * @author jwelzel
  * 

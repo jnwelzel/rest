@@ -6,15 +6,15 @@ angular.module('ngIdentity.controllers', [])
   .controller('HomeController', ['$scope', 'User', function($scope, User) {
     $scope.users = User.query();
   }])
-  .controller('LoginController', ['$scope', 'LogIn', '$window', '$location', function($scope, LogIn, $window, $location) {
+  .controller('LoginController', ['$scope', 'Session', 'TokenService', '$window', '$location', function($scope, Session, TokenService, $window, $location) {
     $scope.user = {};
 
     $scope.login = function(user) {
       $scope.master = angular.copy(user);
-      LogIn.save(
+      Session.save(
         {}, $scope.master,
         function(success) {
-          $window.sessionStorage.setItem('token', success.authToken.id);
+          TokenService.setToken(success.authToken.id);
           $window.alert('Successfully logged in.');
           $location.path('/home');
         },
@@ -24,11 +24,19 @@ angular.module('ngIdentity.controllers', [])
       );
     };
   }])
-  .controller('LogoutController', ['$scope', 'TokenService', '$window', '$location', function($scope, TokenService, $window, $location) {
+  .controller('LogoutController', ['$scope', 'TokenService', 'Session', '$window', '$location', function($scope, TokenService, Session, $window, $location) {
     $scope.logout = function() {
-      TokenService.clearToken();
-      $window.alert('Successfully logged out.');
-      $location.path('/home');
+      Session.delete(
+        {}, 
+        function(success) {
+          TokenService.clearToken();
+          $window.alert('Successfully logged out.');
+          $location.path('/home');
+        },
+        function(error) {
+          $window.alert('Error: ' + error.data);
+        }
+      );
     }
   }])
   .controller('SessionInfoController', ['$scope','TokenService', function($scope, TokenService) {

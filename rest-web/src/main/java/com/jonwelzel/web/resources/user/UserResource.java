@@ -1,6 +1,5 @@
 package com.jonwelzel.web.resources.user;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -13,18 +12,13 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jonwelzel.ejb.session.SessionBean;
 import com.jonwelzel.ejb.user.UserBean;
 import com.jonwelzel.persistence.entities.User;
-import com.jonwelzel.util.SecurityUtils;
 import com.jonwelzel.web.resources.Resource;
 
 /**
@@ -42,9 +36,6 @@ public class UserResource implements Resource<Long, User> {
 
     @EJB
     private UserBean userBean;
-
-    @EJB
-    private SessionBean sessionBean;
 
     @Override
     @GET
@@ -81,27 +72,4 @@ public class UserResource implements Resource<Long, User> {
         userBean.deleteUser(id);
     }
 
-    @POST
-    @Path("/login")
-    public Response login(User user) {
-        System.out.println("Log in for user \"" + user.getEmail() + "\"");
-        User dbUser = userBean.findByEmail(user.getEmail());
-        if (dbUser == null) {
-            throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity("Invalid email address.")
-                    .build());
-        }
-        if (!SecurityUtils.validatePassword(user.getPassword(), dbUser.getPasswordHash())) {
-            throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity("Invalid password.").build());
-        }
-        try { // Now the session stuff
-            String hash = SecurityUtils.generateSecureHex();
-            sessionBean.newSession(hash, dbUser.getAuthToken().getId(), false);
-            dbUser.getAuthToken().setId(hash); // send back the session secret and not the user id ;)
-        } catch (NoSuchAlgorithmException e) {
-            log.error("The \"SHA1\" encryption algorithm needed to generate the user session hash could not be found.");
-            throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR)
-                    .entity("Could not secure user session.").build());
-        }
-        return Response.status(Status.OK).entity(dbUser).build();
-    }
 }
