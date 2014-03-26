@@ -16,6 +16,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -65,8 +66,8 @@ public class User extends AbstractEntity<Long> implements Principal {
     private AuthToken authToken;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private RoleType role;
+    @OneToMany(orphanRemoval = true)
+    private List<RoleType> roles;
 
     public User() {
     }
@@ -141,6 +142,14 @@ public class User extends AbstractEntity<Long> implements Principal {
 
     public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
+    }
+
+    public List<RoleType> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<RoleType> roles) {
+        this.roles = roles;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.jonwelzel.web.resources.user;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -20,13 +21,11 @@ import javax.ws.rs.core.Response.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.jonwelzel.ejb.session.SessionBean;
 import com.jonwelzel.ejb.user.UserBean;
 import com.jonwelzel.persistence.entities.User;
-import com.jonwelzel.persistence.enumerations.RoleType;
 import com.jonwelzel.util.SecurityUtils;
-import com.jonwelzel.web.annotations.Protected;
 import com.jonwelzel.web.resources.Resource;
-import com.jonwelzel.web.validation.TokenAuthValidation;
 
 /**
  * Restful resource for {@link User}.
@@ -44,9 +43,11 @@ public class UserResource implements Resource<Long, User> {
     @EJB
     private UserBean userBean;
 
+    @EJB
+    private SessionBean sessionBean;
+
     @Override
     @GET
-    @Protected(validator = TokenAuthValidation.class, role = RoleType.USER)
     public List<User> getResources(@HeaderParam("authorization") String token) {
         log.info("Authorization token: " + token);
         return userBean.findAll();
@@ -91,6 +92,15 @@ public class UserResource implements Resource<Long, User> {
         }
         if (!SecurityUtils.validatePassword(user.getPassword(), dbUser.getPasswordHash())) {
             throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity("Invalid password.").build());
+        }
+        try { // Now the session stuff
+            String hash = SecurityUtils.generateSecureHex();
+            sessionBean.newSession(hash, dbUser.getAuthToken().getId(), false);
+            dbUser.getAuthToken().setId(hash); // send back the session secret and not the user id ;)
+        } catch (NoSuchAlgorithmException e) {
+            log.error("The \"SHA1\" encryption algorithm needed to generate the user session hash could not be found.");
+            throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR)
+                    .entity("Could not secure user session.").build());
         }
         return Response.status(Status.OK).entity(dbUser).build();
     }

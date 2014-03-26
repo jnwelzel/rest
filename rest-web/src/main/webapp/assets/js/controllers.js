@@ -46,6 +46,7 @@ angular.module('ngIdentity.controllers', [])
     $scope.user = {};
 
     $scope.signUp = function(user) {
+      user.roles = ['ADMIN', 'USER'];
       $scope.master = angular.copy(user);
       User.save(
         {}, $scope.master, 
