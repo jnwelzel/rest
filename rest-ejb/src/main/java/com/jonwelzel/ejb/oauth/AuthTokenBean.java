@@ -7,6 +7,8 @@ import javax.inject.Inject;
 
 import org.slf4j.Logger;
 
+import com.jonwelzel.persistence.entities.AuthToken;
+
 @Stateless(mappedName = "AuthTokenBean")
 @LocalBean
 public class AuthTokenBean {
@@ -15,11 +17,14 @@ public class AuthTokenBean {
     private Logger log;
 
     @EJB
-    private OAuthTokenDao tokenDao;
+    private AuthTokenDao tokenDao;
 
     public boolean isValidToken(String token) {
         log.info("Checking if token is valid");
         return tokenDao.find(token) != null;
     }
 
+    public AuthToken find(String id) {
+        return tokenDao.find(id);
+    }
 }

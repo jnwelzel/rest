@@ -2,7 +2,9 @@ package com.jonwelzel.web.resources.user;
 
 import java.util.List;
 
-import javax.ejb.EJB;
+import javax.annotation.security.DeclareRoles;
+import javax.annotation.security.PermitAll;
+import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -30,15 +32,17 @@ import com.jonwelzel.web.resources.Resource;
 @Path("/users")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
+@DeclareRoles(value = { "USER", "ADMIN" })
 public class UserResource implements Resource<Long, User> {
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    @EJB
+    @Inject
     private UserBean userBean;
 
     @Override
     @GET
+    @PermitAll
     public List<User> getResources(@HeaderParam("authorization") String token) {
         log.info("Authorization token: " + token);
         return userBean.findAll();
@@ -55,6 +59,7 @@ public class UserResource implements Resource<Long, User> {
 
     @Override
     @POST
+    @PermitAll
     public User createResource(User resource) {
         return userBean.createUser(resource);
     }

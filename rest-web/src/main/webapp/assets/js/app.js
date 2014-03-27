@@ -15,6 +15,7 @@ config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvide
   $routeProvider.when('/login', {templateUrl: 'partials/login.html', controller: 'LoginController'});
   $routeProvider.when('/logout', {controller: 'LogoutController'});
   $routeProvider.when('/sign-up', {templateUrl: 'partials/sign_up.html', controller: 'SignUpController'});
+  $routeProvider.when('/pofile', {templateUrl: 'partials/profile.html', controller: 'ProfileController'});
   $routeProvider.otherwise({redirectTo: '/home'});
   $httpProvider.interceptors.push('authInterceptor');
 }]);

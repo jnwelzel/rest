@@ -9,7 +9,8 @@ import javax.ws.rs.core.Application;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jonwelzel.web.resources.session.SessionResource;
+import com.jonwelzel.web.jaxrs.security.SecurityContextFilter;
+import com.jonwelzel.web.resources.session.SessionResourceImpl;
 import com.jonwelzel.web.resources.user.UserResource;
 
 @ApplicationPath(value = "/resources")
@@ -22,7 +23,8 @@ public class JaxRsApplication extends Application {
     public Set<Class<?>> getClasses() {
         final HashSet<Class<?>> set = new HashSet<Class<?>>(3);
         set.add(UserResource.class);
-        set.add(SessionResource.class);
+        set.add(SessionResourceImpl.class);
+        set.add(SecurityContextFilter.class);
         try {
             set.add(Class.forName(JACKSON_FEATURE_CLASS));
         } catch (ClassNotFoundException ignored) {

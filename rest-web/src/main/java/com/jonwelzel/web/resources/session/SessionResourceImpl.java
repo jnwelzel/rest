@@ -2,7 +2,7 @@ package com.jonwelzel.web.resources.session;
 
 import java.security.NoSuchAlgorithmException;
 
-import javax.ejb.EJB;
+import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -19,10 +19,10 @@ public class SessionResourceImpl implements SessionResource {
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    @EJB
+    @Inject
     private UserBean userBean;
 
-    @EJB
+    @Inject
     private SessionBean sessionBean;
 
     @Override
@@ -50,14 +50,14 @@ public class SessionResourceImpl implements SessionResource {
 
     @Override
     public Response logout(String sessionToken) {
-        log.info("Logout for session id \"" + sessionToken + "\"");
         int result = sessionBean.destroySession(sessionToken);
         Response response = null;
-        if (result == 1) {
+        if (result == 1 || result == 0) {
             response = Response.status(Status.OK).build();
         } else {
             response = Response.status(Status.BAD_REQUEST).entity("Could not destroy session.").build();
         }
+        log.info("[" + response.getStatus() + "] Logout for session id \"" + sessionToken + "\"");
         return response;
     }
 

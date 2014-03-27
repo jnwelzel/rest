@@ -29,6 +29,27 @@ public class SessionBean {
     @EJB
     private RedisFactory jedisFactory;
 
+    public String getUserId(String sessionKey) {
+        Jedis jedis = jedisFactory.getResource();
+        String result = null;
+        try {
+            result = jedis.get(sessionKey); // first check if exists
+            if (result != null) {
+                int ttl = jedis.ttl(sessionKey).intValue();
+                if (ttl != -1) { // ttl will be the remaining seconds to live which means it expires
+                    jedis.expire(sessionKey, SESSION_TIMEOUT); // renew timeout
+                }
+            }
+        } catch (Throwable e) {
+            log.error("Redis error!", e);
+        } finally {
+            if (jedis != null) {
+                jedisFactory.returnResource(jedis);
+            }
+        }
+        return result;
+    }
+
     /**
      * Checks the validity of a given session. If the session has a TTL updates it with the value of
      * {@link #SESSION_TIMEOUT}.

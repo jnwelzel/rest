@@ -49,6 +49,13 @@ public interface GenericDao<PK extends Serializable, T extends AbstractEntity<PK
      */
     public void remove(PK id);
 
+    /**
+     * Count all.
+     * 
+     * @return Value indicating the number of records the table currently holds.
+     */
+    public Long count();
+
     public void setClazz(Class<T> clazz);
 
 }

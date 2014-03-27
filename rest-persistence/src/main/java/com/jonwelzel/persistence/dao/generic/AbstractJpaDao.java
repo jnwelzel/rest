@@ -54,19 +54,26 @@ public abstract class AbstractJpaDao<PK extends Serializable, T extends Abstract
     @Override
     public List<T> findAll() {
         TypedQuery<T> q = getEntityManager().createQuery("select e from " + getEntityClass().getSimpleName() + " e",
-                clazz);
+                getEntityClass());
         return q.getResultList();
     }
 
     @Override
     public T find(PK id) {
-        return id != null ? getEntityManager().find(clazz, id) : null;
+        return id != null ? getEntityManager().find(getEntityClass(), id) : null;
     }
 
     @Override
     public void remove(PK id) {
-        T t = getEntityManager().getReference(clazz, id);
+        T t = getEntityManager().getReference(getEntityClass(), id);
         getEntityManager().remove(t);
+    }
+
+    @Override
+    public Long count() {
+        TypedQuery<Long> q = getEntityManager().createQuery(
+                "select count(e) from " + getEntityClass().getSimpleName() + " e", Long.class);
+        return q.getSingleResult();
     }
 
     /**

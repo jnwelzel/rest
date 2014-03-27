@@ -10,17 +10,17 @@ import com.jonwelzel.persistence.entities.User;
  * @author jwelzel
  * 
  */
-public class SecurityContext implements javax.ws.rs.core.SecurityContext {
+public class SecurityContextImpl implements javax.ws.rs.core.SecurityContext {
 
     private final User user;
 
-    public SecurityContext(User user) {
+    public SecurityContextImpl(User user) {
         this.user = user;
     }
 
     @Override
     public String getAuthenticationScheme() {
-        return SecurityContext.FORM_AUTH;
+        return SecurityContextImpl.BASIC_AUTH;
     }
 
     @Override
@@ -30,13 +30,12 @@ public class SecurityContext implements javax.ws.rs.core.SecurityContext {
 
     @Override
     public boolean isSecure() {
-        // TODO Auto-generated method stub
         return false;
     }
 
     @Override
     public boolean isUserInRole(String role) {
-        return user.getRoles().contains(role);
+        return user == null ? false : user.getRoles().contains(role);
     }
 
 }

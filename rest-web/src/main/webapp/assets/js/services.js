@@ -5,8 +5,6 @@
 var userResource = 'resources/users/:id';
 var sessionResource = 'resources/session';
 
-// Demonstrate how to register services
-// In this case it is a simple value service.
 angular.module('ngIdentity.services', ['ngResource'])
   .value('version', '0.1')
   .factory('User', ['$resource', 
@@ -22,12 +20,12 @@ angular.module('ngIdentity.services', ['ngResource'])
       return $resource(sessionResource);
     }]
   )
-  .factory('authInterceptor', ['$rootScope', '$q', '$window', 'TokenService', function($rootScope, $q, $window, TokenService) {
+  .factory('authInterceptor', ['$rootScope', '$q', '$window', 'SessionService', function($rootScope, $q, $window, SessionService) {
     return {
       request: function (config) {
         config.headers = config.headers || {};
-        if ($window.sessionStorage.token) {
-          config.headers.Authorization = TokenService.getToken();
+        if (SessionService.getToken()) {
+          config.headers.Authorization = SessionService.getToken();
         }
         return config;
       },
@@ -41,7 +39,7 @@ angular.module('ngIdentity.services', ['ngResource'])
     };
   }]
   )
-  .service('TokenService', ['$window',
+  .service('SessionService', ['$window',
     function($window) {
       var tokenService = {
         getToken: function() {
@@ -52,6 +50,20 @@ angular.module('ngIdentity.services', ['ngResource'])
           $window.sessionStorage.setItem('token', token);
         },
         clearToken: function() {
+          $window.sessionStorage.removeItem('token');
+        },
+        setUserName: function(name) {
+          $window.sessionStorage.setItem('user', name);
+        },
+        getUserName: function() {
+          var userName = $window.sessionStorage.getItem('user');
+          return userName || null;
+        },
+        clearUserName: function() {
+          $window.sessionStorage.removeItem('user');
+        },
+        clearAll: function() {
+          $window.sessionStorage.removeItem('user');
           $window.sessionStorage.removeItem('token');
         }
       };
