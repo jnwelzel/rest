@@ -18,4 +18,10 @@ public class AuthTokenDao extends AbstractJpaDao<String, AuthToken> {
         return entityManager;
     }
 
+    @Override
+    public AuthToken find(String id) {
+        AuthToken authToken = super.find(id);
+        authToken.getUser();
+        return authToken;
+    }
 }

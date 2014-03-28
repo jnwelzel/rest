@@ -10,9 +10,11 @@ import org.slf4j.Logger;
 import redis.clients.jedis.Jedis;
 
 import com.jonwelzel.ejb.RedisFactory;
+import com.jonwelzel.persistence.entities.AuthToken;
+import com.jonwelzel.persistence.entities.User;
 
 /**
- * Stateless session bean exposing user session-related operations.
+ * Stateless session bean exposing user session-related operations. The information is all stored in Redis.
  * 
  * @author jwelzel
  * 
@@ -29,6 +31,13 @@ public class SessionBean {
     @EJB
     private RedisFactory jedisFactory;
 
+    /**
+     * Find the {@link User}'s {@link AuthToken} ID value using the session key associated to it.
+     * 
+     * @param sessionKey
+     *            The session token stored in Redis that was generated when the user logged in.
+     * @return The user's auth token id value associated to this session.
+     */
     public String getUserId(String sessionKey) {
         Jedis jedis = jedisFactory.getResource();
         String result = null;
@@ -83,6 +92,17 @@ public class SessionBean {
         return result;
     }
 
+    /**
+     * Create a new session for the user. The key is a secure random hash and the value is the secure random hash that
+     * identifies the user, which is created automatically when his account is created.
+     * 
+     * @param key
+     *            Secure random hash value that will be used to identify this session.
+     * @param userId
+     *            Secure random hash value that will be used to identify the user.
+     * @param remember
+     *            If true the session will have no expire date, if false it will have a {@link #SESSION_TIMEOUT}.
+     */
     public void newSession(String key, String userId, boolean remember) {
         Jedis jedis = jedisFactory.getResource();
         try {

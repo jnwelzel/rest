@@ -13,14 +13,17 @@ import javax.ws.rs.ext.Provider;
 
 import com.jonwelzel.ejb.oauth.AuthTokenBean;
 import com.jonwelzel.ejb.session.SessionBean;
+import com.jonwelzel.ejb.user.UserBean;
+import com.jonwelzel.persistence.entities.AuthToken;
 import com.jonwelzel.persistence.entities.User;
+import com.jonwelzel.util.Version;
 
 /**
- * A Servlet filter class for authorizing requests.
+ * A filter class for authenticating requests.
  * 
  * 
  * The role of this filter class is to set a {@link javax.ws.rs.core.SecurityContext} in the
- * {@link com.sun.jersey.spi.container.ContainerRequest}
+ * {@link ContainerRequestFilter}
  * 
  * @see {@link com.jonwelzel.web.jaxrs.security.SecurityContextImpl}
  * 
@@ -35,20 +38,26 @@ public class SecurityContextFilter implements ContainerRequestFilter {
 
     private AuthTokenBean authTokenBean;
 
+    private UserBean userBean;
+
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
         System.out.println("SecurityContextFilter.filter()");
-        final String authToken = requestContext.getHeaderString("Authorization");
+        final String sessionToken = requestContext.getHeaderString("Authorization");
         User user = null;
-        if (authToken != null) {
+        if (sessionToken != null) {
             try {
+                // FUUUUUUUUUUCK! JAX-RS can't use DI here (https://java.net/jira/browse/GLASSFISH-20534)
                 InitialContext initialContext = new InitialContext();
-                sessionBean = (SessionBean) initialContext
-                        .lookup("java:global/rest-ear-1.0-SNAPSHOT/rest-ejb-1.0-SNAPSHOT/SessionBean");
-                authTokenBean = (AuthTokenBean) initialContext
-                        .lookup("java:global/rest-ear-1.0-SNAPSHOT/rest-ejb-1.0-SNAPSHOT/AuthTokenBean");
-                final String userId = sessionBean.getUserId(authToken);
-                user = authTokenBean.find(userId).getUser();
+                sessionBean = (SessionBean) initialContext.lookup("java:global/rest-ear-" + Version.VALUE
+                        + "/rest-ejb/SessionBean");
+                authTokenBean = (AuthTokenBean) initialContext.lookup("java:global/rest-ear-" + Version.VALUE
+                        + "/rest-ejb/AuthTokenBean");
+                userBean = (UserBean) initialContext.lookup("java:global/rest-ear-" + Version.VALUE
+                        + "/rest-ejb/UserBean");
+                final String userId = sessionBean.getUserId(sessionToken);
+                final AuthToken authToken = authTokenBean.find(userId);
+                user = userBean.findByToken(authToken);
             } catch (NamingException e) {
                 System.err.println(e.getMessage());
             }

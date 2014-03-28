@@ -32,7 +32,8 @@ import com.jonwelzel.persistence.enumerations.RoleType;
  */
 @Entity
 @Table(name = "APP_USER")
-@NamedQueries(value = { @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = :email") })
+@NamedQueries(value = { @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = :email"),
+        @NamedQuery(name = "User.findByToken", query = "SELECT u FROM User u WHERE u.authToken = :authToken") })
 public class User extends AbstractEntity<Long> implements Principal {
 
     private static final long serialVersionUID = 1L;

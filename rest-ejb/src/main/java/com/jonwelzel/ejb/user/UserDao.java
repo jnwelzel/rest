@@ -64,4 +64,15 @@ public class UserDao extends AbstractJpaDao<Long, User> {
         return dbUser;
     }
 
+    public User findByToken(AuthToken authToken) {
+        TypedQuery<User> query = getEntityManager().createNamedQuery("User.findByToken", User.class);
+        query.setParameter("authToken", authToken);
+        User dbUser = null;
+        try {
+            dbUser = query.getSingleResult();
+        } catch (NoResultException e) {
+        }
+        return dbUser;
+    }
+
 }

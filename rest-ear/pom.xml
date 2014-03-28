@@ -25,6 +25,11 @@
 						</manifest>
 					</archive>
 					<modules>
+						<ejbModule>
+							<groupId>com.jonwelzel</groupId>
+							<artifactId>rest-ejb</artifactId>
+							<bundleFileName>rest-ejb.jar</bundleFileName>
+						</ejbModule>
 						<webModule>
 							<groupId>com.jonwelzel</groupId>
 							<artifactId>rest-web</artifactId>

@@ -14,7 +14,9 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.SecurityContext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,11 +42,17 @@ public class UserResource implements Resource<Long, User> {
     @Inject
     private UserBean userBean;
 
+    @Context
+    private SecurityContext securityContext;
+
     @Override
     @GET
     @PermitAll
     public List<User> getResources(@HeaderParam("authorization") String token) {
         log.info("Authorization token: " + token);
+        if (securityContext.getUserPrincipal() != null) {
+            log.info("User principal: " + securityContext.getUserPrincipal().getName());
+        }
         return userBean.findAll();
     }
 
