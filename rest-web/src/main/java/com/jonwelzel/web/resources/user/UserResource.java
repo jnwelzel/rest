@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -37,6 +38,7 @@ import com.jonwelzel.web.resources.Resource;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @DeclareRoles(value = { "USER", "ADMIN" })
+@RolesAllowed(value = { "USER", "ADMIN" })
 public class UserResource implements Resource<Long, User> {
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -49,7 +51,6 @@ public class UserResource implements Resource<Long, User> {
 
     @Override
     @GET
-    @PermitAll
     public List<User> getResources(@HeaderParam("authorization") String token) {
         log.info("Authorization token: " + token);
         if (securityContext.getUserPrincipal() != null) {

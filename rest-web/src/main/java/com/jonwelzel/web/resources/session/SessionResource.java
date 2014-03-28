@@ -1,5 +1,7 @@
 package com.jonwelzel.web.resources.session;
 
+import javax.annotation.security.DeclareRoles;
+import javax.annotation.security.PermitAll;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.HeaderParam;
@@ -14,6 +16,8 @@ import com.jonwelzel.persistence.entities.User;
 @Path("/session")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
+@DeclareRoles(value = { "USER", "ADMIN" })
+@PermitAll
 public interface SessionResource {
 
     @POST

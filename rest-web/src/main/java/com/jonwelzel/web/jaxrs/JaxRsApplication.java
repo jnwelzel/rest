@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
+import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,6 +26,7 @@ public class JaxRsApplication extends Application {
         set.add(UserResource.class);
         set.add(SessionResourceImpl.class);
         set.add(SecurityContextFilter.class);
+        set.add(RolesAllowedDynamicFeature.class); // Important for auth in JAX-RS using annotations
         try {
             set.add(Class.forName(JACKSON_FEATURE_CLASS));
         } catch (ClassNotFoundException ignored) {

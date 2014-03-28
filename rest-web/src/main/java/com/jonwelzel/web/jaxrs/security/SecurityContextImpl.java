@@ -3,6 +3,7 @@ package com.jonwelzel.web.jaxrs.security;
 import java.security.Principal;
 
 import com.jonwelzel.persistence.entities.User;
+import com.jonwelzel.persistence.enumerations.RoleType;
 
 /**
  * Class that manages the security context.
@@ -35,7 +36,7 @@ public class SecurityContextImpl implements javax.ws.rs.core.SecurityContext {
 
     @Override
     public boolean isUserInRole(String role) {
-        return user == null ? false : user.getRoles().contains(role);
+        return user == null ? false : user.getRoles().contains(RoleType.valueOf(role));
     }
 
 }

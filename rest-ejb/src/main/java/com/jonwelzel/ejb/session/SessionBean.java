@@ -24,7 +24,7 @@ import com.jonwelzel.persistence.entities.User;
 public class SessionBean {
 
     // private final int SESSION_TIMEOUT = 900; // 15 min in seconds
-    private final int SESSION_TIMEOUT = 60;
+    private final int SESSION_TIMEOUT = 180;
 
     @Inject
     private Logger log;

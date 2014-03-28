@@ -30,12 +30,17 @@ angular.module('ngIdentity.services', ['ngResource'])
         return config;
       },
       response: function (response) {
-        if (response.status === 401) {
+        return response || $q.when(response);
+      },
+      responseError: function(rejection) {
+        console.log('ERROR HTTP STATUS ' + rejection.status);
+        if (rejection.status === 401 || rejection.status === 403) {
           // handle the case where the user is not authenticated
-          console.log('401 NOT AUTHORIZED');
+          SessionService.clearToken(); // clear session just in case
+          SessionService.clearUserName();
           $location.path('/login');
         }
-        return response || $q.when(response);
+        return $q.reject(rejection);
       }
     };
   }]
