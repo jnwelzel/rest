@@ -23,7 +23,8 @@ import com.jonwelzel.persistence.entities.User;
 @LocalBean
 public class SessionBean {
 
-    private final int SESSION_TIMEOUT = 900; // 15 min in seconds
+    // private final int SESSION_TIMEOUT = 900; // 15 min in seconds
+    private final int SESSION_TIMEOUT = 60;
 
     @Inject
     private Logger log;
@@ -36,7 +37,7 @@ public class SessionBean {
      * 
      * @param sessionKey
      *            The session token stored in Redis that was generated when the user logged in.
-     * @return The user's auth token id value associated to this session.
+     * @return The user's auth token id value associated to this session or null if the session expired (doesn't exist).
      */
     public String getUserId(String sessionKey) {
         Jedis jedis = jedisFactory.getResource();

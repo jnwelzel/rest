@@ -9,6 +9,8 @@ import javax.naming.NamingException;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.Provider;
 
 import com.jonwelzel.ejb.oauth.AuthTokenBean;
@@ -51,13 +53,18 @@ public class SecurityContextFilter implements ContainerRequestFilter {
                 InitialContext initialContext = new InitialContext();
                 sessionBean = (SessionBean) initialContext.lookup("java:global/rest-ear-" + Version.VALUE
                         + "/rest-ejb/SessionBean");
-                authTokenBean = (AuthTokenBean) initialContext.lookup("java:global/rest-ear-" + Version.VALUE
-                        + "/rest-ejb/AuthTokenBean");
-                userBean = (UserBean) initialContext.lookup("java:global/rest-ear-" + Version.VALUE
-                        + "/rest-ejb/UserBean");
                 final String userId = sessionBean.getUserId(sessionToken);
-                final AuthToken authToken = authTokenBean.find(userId);
-                user = userBean.findByToken(authToken);
+                if (userId == null) {
+                    // Ops, session expired buddy
+                    requestContext.abortWith(Response.status(Status.UNAUTHORIZED).entity("Session expired!").build());
+                } else {
+                    authTokenBean = (AuthTokenBean) initialContext.lookup("java:global/rest-ear-" + Version.VALUE
+                            + "/rest-ejb/AuthTokenBean");
+                    userBean = (UserBean) initialContext.lookup("java:global/rest-ear-" + Version.VALUE
+                            + "/rest-ejb/UserBean");
+                    final AuthToken authToken = authTokenBean.find(userId);
+                    user = userBean.findByToken(authToken);
+                }
             } catch (NamingException e) {
                 System.err.println(e.getMessage());
             }

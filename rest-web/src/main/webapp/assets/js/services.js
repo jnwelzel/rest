@@ -20,7 +20,7 @@ angular.module('ngIdentity.services', ['ngResource'])
       return $resource(sessionResource);
     }]
   )
-  .factory('authInterceptor', ['$rootScope', '$q', '$window', 'SessionService', function($rootScope, $q, $window, SessionService) {
+  .factory('authInterceptor', ['$rootScope', '$q', '$window', 'SessionService', '$location', function($rootScope, $q, $window, SessionService, $location) {
     return {
       request: function (config) {
         config.headers = config.headers || {};
@@ -32,7 +32,8 @@ angular.module('ngIdentity.services', ['ngResource'])
       response: function (response) {
         if (response.status === 401) {
           // handle the case where the user is not authenticated
-          console.log('401 Not Authorized');
+          console.log('401 NOT AUTHORIZED');
+          $location.path('/login');
         }
         return response || $q.when(response);
       }

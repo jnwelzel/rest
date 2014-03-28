@@ -45,7 +45,7 @@ public class User extends AbstractEntity<Long> implements Principal {
     private Long id;
 
     @Column(length = 128, nullable = false)
-    private String name;
+    private String firstName;
 
     @Column(length = 128, nullable = false)
     private String lastName;
@@ -75,7 +75,7 @@ public class User extends AbstractEntity<Long> implements Principal {
 
     public User(Long id, String name) {
         this.id = id;
-        this.name = name;
+        this.firstName = name;
     }
 
     @Override
@@ -88,13 +88,12 @@ public class User extends AbstractEntity<Long> implements Principal {
         this.id = id;
     }
 
-    @Override
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstName(String name) {
+        this.firstName = name;
     }
 
     public String getLastName() {
@@ -155,6 +154,11 @@ public class User extends AbstractEntity<Long> implements Principal {
 
     @Override
     public String toString() {
-        return "User{" + "id=" + id + ", name='" + name + '\'' + '}';
+        return "User{" + "id=" + id + ", name='" + firstName + '\'' + '}';
+    }
+
+    @Override
+    public String getName() {
+        return firstName + " " + lastName + " (" + email + ")";
     }
 }

@@ -1,5 +1,6 @@
 package com.jonwelzel.web.resources.user;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.security.DeclareRoles;
@@ -23,6 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import com.jonwelzel.ejb.user.UserBean;
 import com.jonwelzel.persistence.entities.User;
+import com.jonwelzel.persistence.enumerations.RoleType;
 import com.jonwelzel.web.resources.Resource;
 
 /**
@@ -69,6 +71,9 @@ public class UserResource implements Resource<Long, User> {
     @POST
     @PermitAll
     public User createResource(User resource) {
+        if (!securityContext.isUserInRole(RoleType.ADMIN.toString())) {
+            resource.setRoles(Arrays.asList(RoleType.USER)); // Only admin can make other admin
+        }
         return userBean.createUser(resource);
     }
 

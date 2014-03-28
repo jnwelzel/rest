@@ -27,7 +27,7 @@ public class SessionResourceImpl implements SessionResource {
 
     @Override
     public Response login(User user) {
-        log.info("Log in for user \"" + user.getEmail() + "\"");
+        log.info("Loggin in user \"" + user.getEmail() + "\"");
         User dbUser = userBean.findByEmail(user.getEmail());
         if (dbUser == null) {
             throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity("Invalid email address.")
@@ -50,6 +50,7 @@ public class SessionResourceImpl implements SessionResource {
 
     @Override
     public Response logout(String sessionToken) {
+        log.info("Logging out session \"" + sessionToken + "\"");
         int result = sessionBean.destroySession(sessionToken);
         Response response = null;
         if (result == 1 || result == 0) {

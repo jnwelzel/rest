@@ -7,6 +7,9 @@ angular.module('ngIdentity.controllers', [])
     $scope.users = User.query();
   }])
   .controller('ProfileController', ['$scope', function($scope) {
+    
+  }])
+  .controller('ProfileViewController', ['$scope', function($scope) {
 
   }])
   .controller('LoginController', ['$scope', 'Session', 'SessionService', '$window', '$location', function($scope, Session, SessionService, $window, $location) {
@@ -16,7 +19,7 @@ angular.module('ngIdentity.controllers', [])
         {}, $scope.master,
         function(success) {
           SessionService.setToken(success.authToken.id);
-          SessionService.setUserName(success.name + ' ' + success.lastName);
+          SessionService.setUserName(success.firstName + ' ' + success.lastName);
           $window.alert('Successfully logged in.');
           $location.path('/home');
         },
@@ -35,9 +38,15 @@ angular.module('ngIdentity.controllers', [])
             SessionService.clearToken();
             SessionService.clearUserName();
             $window.alert('Successfully logged out.');
+            $location.path('/home');
           },
           function(error) {
             $window.alert('Error: ' + error.data);
+            if (error.status == 401) {
+              SessionService.clearToken();
+              SessionService.clearUserName();
+              $location.path('/login');
+            }
           }
         );
       }
@@ -68,7 +77,6 @@ angular.module('ngIdentity.controllers', [])
     $scope.user = {};
 
     $scope.signUp = function(user) {
-      user.roles = ['ADMIN', 'USER'];
       $scope.master = angular.copy(user);
       User.save(
         {}, $scope.master, 
