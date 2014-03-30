@@ -6,11 +6,12 @@ import java.util.Set;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
-import org.glassfish.jersey.oauth1.signature.OAuth1SignatureFeature;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
+import org.glassfish.jersey.server.oauth1.OAuth1ServerFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.jonwelzel.web.jaxrs.oauth.OAuthProviderImpl;
 import com.jonwelzel.web.jaxrs.security.SecurityContextFilter;
 import com.jonwelzel.web.resources.session.SessionResourceImpl;
 import com.jonwelzel.web.resources.user.UserResource;
@@ -28,7 +29,9 @@ public class JaxRsApplication extends Application {
 		set.add(SessionResourceImpl.class);
 		set.add(SecurityContextFilter.class);
 		set.add(RolesAllowedDynamicFeature.class); // Important for auth in JAX-RS using annotations
-		set.add(OAuth1SignatureFeature.class);
+		set.add(OAuth1ServerFeature.class);
+		//		set.add(DefaultOAuth1Provider.class);
+		set.add(OAuthProviderImpl.class);
 		try {
 			set.add(Class.forName(JACKSON_FEATURE_CLASS));
 		} catch (ClassNotFoundException ignored) {

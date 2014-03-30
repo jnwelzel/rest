@@ -41,54 +41,54 @@ import com.jonwelzel.web.resources.Resource;
 @RolesAllowed(value = { "USER", "ADMIN" })
 public class UserResource implements Resource<Long, User> {
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+	private Logger log = LoggerFactory.getLogger(getClass());
 
-    @Inject
-    private UserBean userBean;
+	@Inject
+	private UserBean userBean;
 
-    @Context
-    private SecurityContext securityContext;
+	@Context
+	private SecurityContext securityContext;
 
-    @Override
-    @GET
-    public List<User> getResources(@HeaderParam("authorization") String token) {
-        log.info("Authorization token: " + token);
-        if (securityContext.getUserPrincipal() != null) {
-            log.info("User principal: " + securityContext.getUserPrincipal().getName());
-        }
-        return userBean.findAll();
-    }
+	@Override
+	@GET
+	public List<User> getResources(@HeaderParam("authorization") String token) {
+		log.info("Authorization token: " + token);
+		if (securityContext.getUserPrincipal() != null) {
+			log.info("User principal: " + securityContext.getUserPrincipal().getName());
+		}
+		return userBean.findAll();
+	}
 
-    @Override
-    @GET
-    @Path("{id}")
-    public User getResource(@PathParam("id") Long id, @HeaderParam("authorization") String token) {
-        // TODO Tratar com um 404 NOT FOUND caso n exista User com id passado
-        log.info("Authorization token: " + token);
-        return userBean.findUser(id);
-    }
+	@Override
+	@GET
+	@Path("{id}")
+	public User getResource(@PathParam("id") Long id, @HeaderParam("authorization") String token) {
+		// TODO Tratar com um 404 NOT FOUND caso n exista User com id passado
+		log.info("Authorization token: " + token);
+		return userBean.findUser(id);
+	}
 
-    @Override
-    @POST
-    @PermitAll
-    public User createResource(User resource) {
-        if (!securityContext.isUserInRole(RoleType.ADMIN.toString())) {
-            resource.setRoles(Arrays.asList(RoleType.USER)); // Only admin can make other admin
-        }
-        return userBean.createUser(resource);
-    }
+	@Override
+	@POST
+	@PermitAll
+	public User createResource(User resource) {
+		if (!securityContext.isUserInRole(RoleType.ADMIN.toString())) {
+			resource.setRoles(Arrays.asList(RoleType.USER)); // Only admin can make other admin
+		}
+		return userBean.createUser(resource);
+	}
 
-    @Override
-    @PUT
-    public User updateResource(User resource) {
-        return userBean.updateUser(resource);
-    }
+	@Override
+	@PUT
+	public User updateResource(User resource) {
+		return userBean.updateUser(resource);
+	}
 
-    @Override
-    @DELETE
-    @Path("{id}")
-    public void deleteResource(@PathParam("id") Long id) {
-        userBean.deleteUser(id);
-    }
+	@Override
+	@DELETE
+	@Path("{id}")
+	public void deleteResource(@PathParam("id") Long id) {
+		userBean.deleteUser(id);
+	}
 
 }
