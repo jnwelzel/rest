@@ -2,8 +2,8 @@
 
 /* Services */
 
-var userResource = 'resources/users/:id';
-var sessionResource = 'resources/session';
+var userResource = '/users/:id';
+var sessionResource = '/session';
 
 angular.module('ngIdentity.services', ['ngResource'])
   .value('version', '0.1')

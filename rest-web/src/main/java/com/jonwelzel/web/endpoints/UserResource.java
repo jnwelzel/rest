@@ -21,8 +21,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import com.jonwelzel.ejb.annotations.Log;
 import com.jonwelzel.ejb.user.UserBean;
 import com.jonwelzel.persistence.entities.User;
 import com.jonwelzel.persistence.enumerations.RoleType;
@@ -34,14 +34,16 @@ import com.jonwelzel.web.Resource;
  * @author jwelzel
  * 
  */
-@Path("/users")
+@Path("users")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @DeclareRoles(value = { "USER", "ADMIN" })
 @RolesAllowed(value = { "USER", "ADMIN" })
 public class UserResource implements Resource<Long, User> {
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    @Inject
+    @Log
+    private Logger log;
 
     @Inject
     private UserBean userBean;

@@ -24,7 +24,7 @@ import com.jonwelzel.ejb.user.UserBean;
 import com.jonwelzel.persistence.entities.User;
 import com.jonwelzel.util.SecurityUtils;
 
-@Path("/session")
+@Path("session")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @DeclareRoles(value = { "USER", "ADMIN" })
