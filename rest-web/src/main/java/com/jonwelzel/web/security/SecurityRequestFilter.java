@@ -50,31 +50,20 @@ public class SecurityRequestFilter implements ContainerRequestFilter {
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
-        log.info("[" + requestContext.getRequest().getMethod() + "] \"" + requestContext.getUriInfo().getPath() + "\"");
         final String sessionToken = requestContext.getHeaderString("Authorization");
         User user = null;
         if (sessionToken != null) {
-            // try {
-            // FUUUUUUUUUUCK! JAX-RS can't use DI for EJB here (https://java.net/jira/browse/GLASSFISH-20534)
-            // InitialContext initialContext = new InitialContext();
-            // sessionBean = (SessionBean) initialContext.lookup("java:global/rest-ear-" + Version.VALUE
-            // + "/rest-ejb/SessionBean");
             final String userId = sessionBean.getUserId(sessionToken);
             if (userId == null) {
                 // Ops, session expired buddy
                 requestContext.abortWith(Response.status(Status.UNAUTHORIZED).entity("Session expired!").build());
             } else {
-                // authTokenBean = (AuthTokenBean) initialContext.lookup("java:global/rest-ear-" + Version.VALUE
-                // + "/rest-ejb/AuthTokenBean");
-                // userBean = (UserBean) initialContext.lookup("java:global/rest-ear-" + Version.VALUE
-                // + "/rest-ejb/UserBean");
                 final AuthToken authToken = authTokenBean.find(userId);
                 user = userBean.findByToken(authToken);
             }
-            // } catch (NamingException e) {
-            // System.err.println(e.getMessage());
-            // }
         }
+        log.info("[" + requestContext.getRequest().getMethod() + "] \"" + requestContext.getUriInfo().getPath()
+                + "\" (User=" + user + ", token=" + sessionToken + ")");
         requestContext.setSecurityContext(new SecurityContextImpl(user));
     }
 

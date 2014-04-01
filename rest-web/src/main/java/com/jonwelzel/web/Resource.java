@@ -24,7 +24,7 @@ public interface Resource<PK extends Serializable, T extends AbstractEntity<PK>>
      * 
      * @return A list containing all records found or an empty list if none were found.
      */
-    public List<T> getResources(String token, SecurityContext securityContext);
+    public List<T> getResources(String token, SecurityContext context);
 
     /**
      * Retrieve a single record of the {@linkplain T} resource type by its identification attribute.
@@ -42,7 +42,7 @@ public interface Resource<PK extends Serializable, T extends AbstractEntity<PK>>
      *            The object containing the resource data that will be created.
      * @return The freshly saved resource object.
      */
-    public T createResource(T resource, SecurityContext securityContext);
+    public T createResource(T resource, SecurityContext context);
 
     /**
      * Update the existing record of this resource.

@@ -165,7 +165,8 @@ public class User extends AbstractEntity<Long> implements Principal {
 
     @Override
     public String toString() {
-        return "User{" + "id=" + id + ", name='" + firstName + '\'' + '}';
+        return "User{" + "id=" + id + ", name='" + getFirstName() + " " + getLastName() + "', email='" + getEmail()
+                + "', username='" + getAlias() + "'}";
     }
 
     @Override
