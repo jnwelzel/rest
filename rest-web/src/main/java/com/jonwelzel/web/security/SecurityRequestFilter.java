@@ -15,7 +15,7 @@ import org.slf4j.Logger;
 
 import com.jonwelzel.ejb.annotations.Log;
 import com.jonwelzel.ejb.oauth.AuthTokenBean;
-import com.jonwelzel.ejb.session.SessionBean;
+import com.jonwelzel.ejb.session.HttpSessionBean;
 import com.jonwelzel.ejb.user.UserBean;
 import com.jonwelzel.persistence.entities.AuthToken;
 import com.jonwelzel.persistence.entities.User;
@@ -40,7 +40,7 @@ public class SecurityRequestFilter implements ContainerRequestFilter {
     private Logger log;
 
     @Inject
-    private SessionBean sessionBean;
+    private HttpSessionBean sessionBean;
 
     @Inject
     private AuthTokenBean authTokenBean;

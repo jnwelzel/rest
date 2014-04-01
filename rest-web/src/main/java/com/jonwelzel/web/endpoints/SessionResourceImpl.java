@@ -1,6 +1,7 @@
 package com.jonwelzel.web.endpoints;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.PermitAll;
@@ -19,8 +20,9 @@ import javax.ws.rs.core.Response.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jonwelzel.ejb.session.SessionBean;
+import com.jonwelzel.ejb.session.HttpSessionBean;
 import com.jonwelzel.ejb.user.UserBean;
+import com.jonwelzel.persistence.entities.AuthToken;
 import com.jonwelzel.persistence.entities.User;
 import com.jonwelzel.util.SecurityUtils;
 
@@ -37,7 +39,7 @@ public class SessionResourceImpl implements SessionResource {
     private UserBean userBean;
 
     @Inject
-    private SessionBean sessionBean;
+    private HttpSessionBean httpSessionBean;
 
     @Override
     @POST
@@ -53,8 +55,8 @@ public class SessionResourceImpl implements SessionResource {
         }
         try { // Now the session stuff
             String hash = SecurityUtils.generateSecureHex();
-            sessionBean.newSession(hash, dbUser.getAuthToken().getId(), false);
-            dbUser.getAuthToken().setId(hash); // send back the session secret and not the user id ;)
+            httpSessionBean.newSession(hash, dbUser.getId().toString(), false);
+            dbUser.setAuthTokens(Arrays.asList(new AuthToken(hash))); // send back the session secret and not the user id ;)
         } catch (NoSuchAlgorithmException e) {
             log.error("The \"SHA1\" encryption algorithm needed to generate the user session hash could not be found.");
             throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR)
@@ -66,7 +68,7 @@ public class SessionResourceImpl implements SessionResource {
     @Override
     @DELETE
     public Response logout(@HeaderParam("authorization") String sessionToken) {
-        int result = sessionBean.destroySession(sessionToken);
+        int result = httpSessionBean.destroySession(sessionToken);
         Response response = null;
         if (result == 1 || result == 0) {
             response = Response.status(Status.OK).build();

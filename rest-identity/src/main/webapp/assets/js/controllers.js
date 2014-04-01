@@ -18,7 +18,7 @@ angular.module('ngIdentity.controllers', [])
       Session.save(
         {}, $scope.master,
         function(success) {
-          SessionService.setToken(success.authToken.id);
+          SessionService.setToken(success.authTokens[0].id);
           SessionService.setUserName(success.firstName + ' ' + success.lastName);
           $window.alert('Successfully logged in.');
           $location.path('/home');

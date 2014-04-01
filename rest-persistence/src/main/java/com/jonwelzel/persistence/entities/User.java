@@ -1,6 +1,7 @@
 package com.jonwelzel.persistence.entities;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -11,17 +12,15 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.jonwelzel.persistence.enumerations.RoleType;
 
 /**
@@ -33,7 +32,7 @@ import com.jonwelzel.persistence.enumerations.RoleType;
 @Entity
 @Table(name = "APP_USER")
 @NamedQueries(value = { @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = :email"),
-        @NamedQuery(name = "User.findByToken", query = "SELECT u FROM User u WHERE u.authToken = :authToken") })
+        @NamedQuery(name = "User.findByToken", query = "SELECT u FROM User u JOIN u.authTokens a WHERE a = :authToken") })
 public class User extends AbstractEntity<Long> implements Principal {
 
     private static final long serialVersionUID = 1L;
@@ -65,9 +64,9 @@ public class User extends AbstractEntity<Long> implements Principal {
     @ManyToMany(mappedBy = "users")
     private List<Company> companies;
 
-    @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.REMOVE }, optional = false, orphanRemoval = true)
-    @JoinTable(name = "USER_TOKEN", joinColumns = { @JoinColumn(name = "USER_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "TOKEN_ID", referencedColumnName = "ID") })
-    private AuthToken authToken;
+    @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.REMOVE }, orphanRemoval = true, mappedBy = "user")
+    @JsonManagedReference
+    private List<AuthToken> authTokens = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     @OneToMany(orphanRemoval = true)
@@ -131,12 +130,12 @@ public class User extends AbstractEntity<Long> implements Principal {
         this.companies = companies;
     }
 
-    public AuthToken getAuthToken() {
-        return authToken;
+    public List<AuthToken> getAuthTokens() {
+        return authTokens;
     }
 
-    public void setAuthToken(AuthToken authToken) {
-        this.authToken = authToken;
+    public void setAuthTokens(List<AuthToken> authTokens) {
+        this.authTokens = authTokens;
     }
 
     public String getPasswordHash() {
