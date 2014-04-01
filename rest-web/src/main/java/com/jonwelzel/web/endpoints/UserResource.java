@@ -6,6 +6,7 @@ import java.util.List;
 import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -39,6 +40,7 @@ import com.jonwelzel.web.Resource;
 @Produces(MediaType.APPLICATION_JSON)
 @DeclareRoles(value = { "USER", "ADMIN" })
 @RolesAllowed(value = { "USER", "ADMIN" })
+@RequestScoped
 public class UserResource implements Resource<Long, User> {
 
     @Inject
@@ -48,12 +50,10 @@ public class UserResource implements Resource<Long, User> {
     @Inject
     private UserBean userBean;
 
-    @Context
-    private SecurityContext securityContext;
-
     @Override
     @GET
-    public List<User> getResources(@HeaderParam("authorization") String token) {
+    @PermitAll
+    public List<User> getResources(@HeaderParam("authorization") String token, @Context SecurityContext securityContext) {
         log.info("Authorization token: " + token);
         if (securityContext.getUserPrincipal() != null) {
             log.info("User principal: " + securityContext.getUserPrincipal().getName());
@@ -73,7 +73,7 @@ public class UserResource implements Resource<Long, User> {
     @Override
     @POST
     @PermitAll
-    public User createResource(User resource) {
+    public User createResource(User resource, @Context SecurityContext securityContext) {
         if (!securityContext.isUserInRole(RoleType.ADMIN.toString())) {
             resource.setRoles(Arrays.asList(RoleType.USER)); // Only admin can make other admin
         }
