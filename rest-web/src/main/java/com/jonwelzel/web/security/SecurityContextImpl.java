@@ -1,4 +1,4 @@
-package com.jonwelzel.web.jaxrs.security;
+package com.jonwelzel.web.security;
 
 import java.security.Principal;
 

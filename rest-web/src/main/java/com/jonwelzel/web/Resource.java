@@ -1,4 +1,4 @@
-package com.jonwelzel.web.resources;
+package com.jonwelzel.web;
 
 import java.io.Serializable;
 import java.util.List;

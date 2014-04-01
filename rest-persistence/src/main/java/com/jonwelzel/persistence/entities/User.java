@@ -50,6 +50,9 @@ public class User extends AbstractEntity<Long> implements Principal {
     @Column(length = 128, nullable = false)
     private String lastName;
 
+    @Column(length = 30, unique = true, nullable = false)
+    private String alias;
+
     @Column(length = 80, nullable = false, unique = true)
     private String email;
 
@@ -150,6 +153,14 @@ public class User extends AbstractEntity<Long> implements Principal {
 
     public void setRoles(List<RoleType> roles) {
         this.roles = roles;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
     }
 
     @Override

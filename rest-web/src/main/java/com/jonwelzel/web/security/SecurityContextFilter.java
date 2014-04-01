@@ -1,8 +1,7 @@
-package com.jonwelzel.web.jaxrs.security;
+package com.jonwelzel.web.security;
 
 import java.io.IOException;
 
-import javax.annotation.ManagedBean;
 import javax.annotation.Priority;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -27,13 +26,12 @@ import com.jonwelzel.util.Version;
  * The role of this filter class is to set a {@link javax.ws.rs.core.SecurityContext} in the
  * {@link ContainerRequestFilter}
  * 
- * @see {@link com.jonwelzel.web.jaxrs.security.SecurityContextImpl}
+ * @see {@link com.jonwelzel.web.security.SecurityContextImpl}
  * 
  * @author jwelzel
  */
 @Provider
 @Priority(Priorities.AUTHENTICATION)
-@ManagedBean
 public class SecurityContextFilter implements ContainerRequestFilter {
 
     private SessionBean sessionBean;
