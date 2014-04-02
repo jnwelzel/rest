@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import org.codehaus.jackson.annotate.JsonBackReference;
 
 /**
  * Model/pojo for authentication token. It tells what application (3rd party or not) has access to what user resource.

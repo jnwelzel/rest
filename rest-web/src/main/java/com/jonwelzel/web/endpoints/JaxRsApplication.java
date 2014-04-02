@@ -16,10 +16,13 @@ import com.jonwelzel.web.security.SecurityRequestFilter;
 public class JaxRsApplication extends Application {
 
     private Logger log = LoggerFactory.getLogger(getClass());
+
     private static final String JACKSON_FEATURE_CLASS = "org.glassfish.jersey.jackson.JacksonFeature";
 
     @Override
     public Set<Class<?>> getClasses() {
+        log.info("Setting JAX-RS application classes...");
+
         final HashSet<Class<?>> set = new HashSet<Class<?>>(3);
 
         // Resources
@@ -32,8 +35,9 @@ public class JaxRsApplication extends Application {
 
         try {
             set.add(Class.forName(JACKSON_FEATURE_CLASS));
+            log.info("Jackson Feature successfully registered!");
         } catch (ClassNotFoundException ignored) {
-            log.warn("Could not find class \"" + JACKSON_FEATURE_CLASS + "\"");
+            log.warn("Could not register Jackson Feature. Class \"" + JACKSON_FEATURE_CLASS + "\" not found.");
         }
         return set;
     }
