@@ -10,7 +10,7 @@ import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jonwelzel.web.security.SecurityRequestFilter;
+import com.jonwelzel.web.security.SecurityFilter;
 
 @ApplicationPath("/")
 public class JaxRsApplication extends Application {
@@ -30,7 +30,7 @@ public class JaxRsApplication extends Application {
         set.add(SessionResourceImpl.class);
 
         // Sec + Auth
-        set.add(SecurityRequestFilter.class);
+        set.add(SecurityFilter.class);
         set.add(RolesAllowedDynamicFeature.class); // Important for auth in JAX-RS using annotations
 
         try {

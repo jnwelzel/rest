@@ -31,7 +31,7 @@ import com.jonwelzel.persistence.entities.User;
  */
 @Provider
 @Priority(Priorities.AUTHENTICATION)
-public class SecurityRequestFilter implements ContainerRequestFilter {
+public class SecurityFilter implements ContainerRequestFilter {
 
     @Inject
     @Log
