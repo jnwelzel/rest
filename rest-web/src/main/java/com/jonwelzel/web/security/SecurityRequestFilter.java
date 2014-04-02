@@ -14,10 +14,8 @@ import javax.ws.rs.ext.Provider;
 import org.slf4j.Logger;
 
 import com.jonwelzel.ejb.annotations.Log;
-import com.jonwelzel.ejb.oauth.AuthTokenBean;
 import com.jonwelzel.ejb.session.HttpSessionBean;
 import com.jonwelzel.ejb.user.UserBean;
-import com.jonwelzel.persistence.entities.AuthToken;
 import com.jonwelzel.persistence.entities.User;
 
 /**
@@ -40,10 +38,7 @@ public class SecurityRequestFilter implements ContainerRequestFilter {
     private Logger log;
 
     @Inject
-    private HttpSessionBean sessionBean;
-
-    @Inject
-    private AuthTokenBean authTokenBean;
+    private HttpSessionBean httpSessionBean;
 
     @Inject
     private UserBean userBean;
@@ -53,13 +48,12 @@ public class SecurityRequestFilter implements ContainerRequestFilter {
         final String sessionToken = requestContext.getHeaderString("Authorization");
         User user = null;
         if (sessionToken != null) {
-            final String userId = sessionBean.getUserId(sessionToken);
+            final String userId = httpSessionBean.getUserId(sessionToken);
             if (userId == null) {
                 // Ops, session expired buddy
                 requestContext.abortWith(Response.status(Status.UNAUTHORIZED).entity("Session expired!").build());
             } else {
-                final AuthToken authToken = authTokenBean.find(userId);
-                user = userBean.findByToken(authToken);
+                user = userBean.findUser(Long.valueOf(userId));
             }
         }
         log.info("[" + requestContext.getRequest().getMethod() + "] \"" + requestContext.getUriInfo().getPath()

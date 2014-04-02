@@ -21,7 +21,7 @@ public class JaxRsApplication extends Application {
 
     @Override
     public Set<Class<?>> getClasses() {
-        log.info("Setting JAX-RS application classes...");
+        log.info("Registering JAX-RS application classes...");
 
         final HashSet<Class<?>> set = new HashSet<Class<?>>(3);
 

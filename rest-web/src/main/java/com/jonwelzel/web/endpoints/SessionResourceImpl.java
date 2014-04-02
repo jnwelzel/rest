@@ -44,7 +44,6 @@ public class SessionResourceImpl implements SessionResource {
     @Override
     @POST
     public Response login(User user) {
-        log.info("Logging in user \"" + user.getEmail() + "\"");
         User dbUser = userBean.findByEmail(user.getEmail());
         if (dbUser == null) {
             throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity("Invalid email address.")
@@ -56,7 +55,8 @@ public class SessionResourceImpl implements SessionResource {
         try { // Now the session stuff
             String hash = SecurityUtils.generateSecureHex();
             httpSessionBean.newSession(hash, dbUser.getId().toString(), false);
-            dbUser.setAuthTokens(Arrays.asList(new AuthToken(hash))); // send back the session secret and not the user id ;)
+            dbUser.setAuthTokens(Arrays.asList(new AuthToken(hash))); // send back the session secret and not the user
+                                                                      // id ;)
         } catch (NoSuchAlgorithmException e) {
             log.error("The \"SHA1\" encryption algorithm needed to generate the user session hash could not be found.");
             throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR)
@@ -75,7 +75,6 @@ public class SessionResourceImpl implements SessionResource {
         } else {
             response = Response.status(Status.BAD_REQUEST).entity("Could not destroy session.").build();
         }
-        log.info("[" + response.getStatus() + "] Logout for session id \"" + sessionToken + "\"");
         return response;
     }
 

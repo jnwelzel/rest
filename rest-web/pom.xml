@@ -43,14 +43,6 @@
 			<version>1.2</version>
 			<scope>provided</scope>
 		</dependency>
-		<!--
-		<dependency>
-			<groupId>org.glassfish.jersey.security</groupId>
-			<artifactId>oauth1-server</artifactId>
-			<version>2.7</version>
-		</dependency>
-		-->
-		
 		<!-- OAUTH -->
 		<dependency>
 			<groupId>org.apache.oltu.oauth2</groupId>
@@ -67,13 +59,6 @@
 			<artifactId>org.apache.oltu.oauth2.resourceserver</artifactId>
 			<version>1.0.0</version>
 		</dependency>
-		<!--
-		<dependency>
-			<groupId>org.glassfish.jersey.ext</groupId>
-			<artifactId>jersey-mvc</artifactId> 
-			<version>2.7</version>
-		</dependency>
-		-->
 	</dependencies>
 	<build>
 		<plugins>
