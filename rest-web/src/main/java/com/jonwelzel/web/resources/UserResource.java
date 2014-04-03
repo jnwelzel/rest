@@ -1,4 +1,4 @@
-package com.jonwelzel.web.endpoints;
+package com.jonwelzel.web.resources;
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,7 +26,6 @@ import com.jonwelzel.ejb.annotations.Log;
 import com.jonwelzel.ejb.user.UserBean;
 import com.jonwelzel.persistence.entities.User;
 import com.jonwelzel.persistence.enumerations.RoleType;
-import com.jonwelzel.web.Resource;
 
 /**
  * Restful resource for {@link User}.

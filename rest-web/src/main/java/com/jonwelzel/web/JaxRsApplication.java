@@ -1,33 +1,41 @@
-package com.jonwelzel.web.endpoints;
+package com.jonwelzel.web;
 
 import java.util.HashSet;
-import java.util.Set;
 
 import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.core.Application;
 
+import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.jonwelzel.web.resources.AuthorizationResource;
+import com.jonwelzel.web.resources.SessionResourceImpl;
+import com.jonwelzel.web.resources.TokenResource;
+import com.jonwelzel.web.resources.UserResource;
 import com.jonwelzel.web.security.SecurityFilter;
 
 @ApplicationPath("/")
-public class JaxRsApplication extends Application {
+public class JaxRsApplication extends ResourceConfig {
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private static final String JACKSON_FEATURE_CLASS = "org.glassfish.jersey.jackson.JacksonFeature";
 
-    @Override
-    public Set<Class<?>> getClasses() {
-        log.info("Registering JAX-RS application classes...");
+    public JaxRsApplication() {
+        log.info("Registering JAX-RS application resources...");
+        registerClasses();
+    }
 
-        final HashSet<Class<?>> set = new HashSet<Class<?>>(3);
+    public void registerClasses() {
+
+        final HashSet<Class<?>> set = new HashSet<Class<?>>();
 
         // Resources
         set.add(UserResource.class);
         set.add(SessionResourceImpl.class);
+        set.add(AuthorizationResource.class);
+        set.add(TokenResource.class);
 
         // Sec + Auth
         set.add(SecurityFilter.class);
@@ -37,9 +45,10 @@ public class JaxRsApplication extends Application {
             set.add(Class.forName(JACKSON_FEATURE_CLASS));
             log.info("Jackson Feature successfully registered!");
         } catch (ClassNotFoundException ignored) {
-            log.warn("Could not register Jackson Feature. Class \"" + JACKSON_FEATURE_CLASS + "\" not found.");
+            log.error("Could not register Jackson Feature. Class \"" + JACKSON_FEATURE_CLASS + "\" not found.");
         }
-        return set;
+
+        registerClasses(set);
     }
 
 }

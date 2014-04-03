@@ -1,4 +1,4 @@
-package com.jonwelzel.web.endpoints;
+package com.jonwelzel.web.resources;
 
 import javax.ws.rs.core.Response;
 

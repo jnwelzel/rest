@@ -1,4 +1,4 @@
-package com.jonwelzel.web.endpoints;
+package com.jonwelzel.web.resources;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
