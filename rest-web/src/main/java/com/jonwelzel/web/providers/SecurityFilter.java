@@ -1,4 +1,4 @@
-package com.jonwelzel.web.security;
+package com.jonwelzel.web.providers;
 
 import java.io.IOException;
 
@@ -17,6 +17,7 @@ import com.jonwelzel.ejb.annotations.Log;
 import com.jonwelzel.ejb.session.HttpSessionBean;
 import com.jonwelzel.ejb.user.UserBean;
 import com.jonwelzel.persistence.entities.User;
+import com.jonwelzel.web.security.SecurityContextImpl;
 
 /**
  * A filter class for authenticating requests.
