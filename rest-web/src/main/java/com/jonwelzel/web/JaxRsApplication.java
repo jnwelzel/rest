@@ -9,9 +9,7 @@ import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jonwelzel.web.resources.AuthorizationResource;
 import com.jonwelzel.web.resources.SessionResourceImpl;
-import com.jonwelzel.web.resources.TokenResource;
 import com.jonwelzel.web.resources.UserResource;
 import com.jonwelzel.web.security.SecurityFilter;
 
@@ -34,8 +32,6 @@ public class JaxRsApplication extends ResourceConfig {
         // Resources
         set.add(UserResource.class);
         set.add(SessionResourceImpl.class);
-        set.add(AuthorizationResource.class);
-        set.add(TokenResource.class);
 
         // Sec + Auth
         set.add(SecurityFilter.class);
