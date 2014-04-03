@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import com.jonwelzel.ejb.annotations.Log;
 import com.jonwelzel.persistence.entities.AuthToken;
 import com.jonwelzel.persistence.entities.User;
-import com.jonwelzel.persistence.enumerations.Application;
 import com.jonwelzel.util.SecurityUtils;
 
 /**
@@ -49,7 +48,6 @@ public class UserBean {
         AuthToken token = new AuthToken();
         try {
             token.setId(SecurityUtils.generateSecureHex());
-            token.setApplicationUrl(Application.IDENTITY.getUrl());
             token.setUser(user);
             user.getAuthTokens().add(token);
             user.setPasswordHash(SecurityUtils.createHash(user.getPassword()));

@@ -1,6 +1,5 @@
 package com.jonwelzel.persistence.entities;
 
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -26,12 +25,15 @@ public class AuthToken extends AbstractEntity<String> {
     @Column(name = "ID", length = 40)
     private String id;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JsonBackReference
     private User user;
 
-    @Basic(optional = false)
-    private String applicationUrl;
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private Consumer consumer;
+
+    @Column(length = 40)
+    private String secret;
 
     public AuthToken() {
     }
@@ -45,6 +47,27 @@ public class AuthToken extends AbstractEntity<String> {
         return id;
     }
 
+    public Consumer getConsumer() {
+        return consumer;
+    }
+
+    public void setConsumer(Consumer consumer) {
+        this.consumer = consumer;
+    }
+
+    public void setSecret(String secret) {
+        this.secret = secret;
+    }
+
+    /**
+     * Returns the token secret.
+     * 
+     * @return token secret
+     */
+    String getSecret() {
+        return secret;
+    }
+
     @Override
     public void setId(String id) {
         this.id = id;
@@ -56,14 +79,6 @@ public class AuthToken extends AbstractEntity<String> {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public String getApplicationUrl() {
-        return applicationUrl;
-    }
-
-    public void setApplicationUrl(String applicationCode) {
-        this.applicationUrl = applicationCode;
     }
 
 }

@@ -10,7 +10,6 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -47,17 +46,20 @@ public class UserResource implements Resource<Long, User> {
     @Inject
     private UserBean userBean;
 
+    @Context
+    private SecurityContext securityContext;
+
     @Override
     @GET
     @PermitAll
-    public List<User> getResources(@HeaderParam("authorization") String token, @Context SecurityContext securityContext) {
+    public List<User> getResources() {
         return userBean.findAll();
     }
 
     @Override
     @GET
     @Path("{id}")
-    public User getResource(@PathParam("id") Long id, @HeaderParam("authorization") String token) {
+    public User getResource(@PathParam("id") Long id) {
         // TODO Tratar com um 404 NOT FOUND caso n exista User com id passado
         return userBean.findUser(id);
     }
@@ -65,7 +67,7 @@ public class UserResource implements Resource<Long, User> {
     @Override
     @POST
     @PermitAll
-    public User createResource(User resource, @Context SecurityContext securityContext) {
+    public User createResource(User resource) {
         if (!securityContext.isUserInRole(RoleType.ADMIN.toString())) {
             resource.setRoles(Arrays.asList(RoleType.USER)); // Only admin can make other admin
         }

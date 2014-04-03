@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jonwelzel.web.providers.SecurityFilter;
+import com.jonwelzel.web.resources.OAuth1ConsumerResource;
 import com.jonwelzel.web.resources.OAuth1TokenResource;
 import com.jonwelzel.web.resources.Oauth1AuthorizationResource;
 import com.jonwelzel.web.resources.SessionResourceImpl;
@@ -32,6 +33,7 @@ public class JaxRsApplication extends ResourceConfig {
         register(SessionResourceImpl.class);
         register(Oauth1AuthorizationResource.class);
         register(OAuth1TokenResource.class);
+        register(OAuth1ConsumerResource.class);
 
         // Sec + Auth
         register(SecurityFilter.class);

@@ -1,15 +1,11 @@
 package com.jonwelzel.ejb.user;
 
 import javax.ejb.Stateless;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-import org.slf4j.Logger;
-
-import com.jonwelzel.ejb.annotations.Log;
 import com.jonwelzel.persistence.dao.generic.AbstractJpaDao;
 import com.jonwelzel.persistence.entities.AuthToken;
 import com.jonwelzel.persistence.entities.User;
@@ -22,10 +18,6 @@ import com.jonwelzel.persistence.entities.User;
  */
 @Stateless
 public class UserDao extends AbstractJpaDao<Long, User> {
-
-    @Inject
-    @Log
-    private Logger log;
 
     @PersistenceContext(unitName = "rest")
     private EntityManager entityManager;

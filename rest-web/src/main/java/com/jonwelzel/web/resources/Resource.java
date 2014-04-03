@@ -3,7 +3,7 @@ package com.jonwelzel.web.resources;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.WebApplicationException;
 
 import com.jonwelzel.persistence.entities.AbstractEntity;
 
@@ -24,7 +24,7 @@ public interface Resource<PK extends Serializable, T extends AbstractEntity<PK>>
      * 
      * @return A list containing all records found or an empty list if none were found.
      */
-    public List<T> getResources(String token, SecurityContext context);
+    public List<T> getResources();
 
     /**
      * Retrieve a single record of the {@linkplain T} resource type by its identification attribute.
@@ -33,7 +33,7 @@ public interface Resource<PK extends Serializable, T extends AbstractEntity<PK>>
      *            The resource id type.
      * @return A single record if found with id, or null if none found.
      */
-    public T getResource(PK id, String token);
+    public T getResource(PK id);
 
     /**
      * Create a new record of the {@linkplain T} resource type.
@@ -42,7 +42,7 @@ public interface Resource<PK extends Serializable, T extends AbstractEntity<PK>>
      *            The object containing the resource data that will be created.
      * @return The freshly saved resource object.
      */
-    public T createResource(T resource, SecurityContext context);
+    public T createResource(T resource) throws WebApplicationException;
 
     /**
      * Update the existing record of this resource.

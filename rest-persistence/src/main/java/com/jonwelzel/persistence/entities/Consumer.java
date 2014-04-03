@@ -2,11 +2,14 @@ package com.jonwelzel.persistence.entities;
 
 import java.security.Principal;
 
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 
 /**
@@ -16,6 +19,7 @@ import javax.persistence.SequenceGenerator;
  * 
  */
 @Entity
+@NamedQueries(value = { @NamedQuery(name = "Consumer.findByKey", query = "SELECT c from Consumer c where c.key = :key") })
 public class Consumer extends AbstractEntity<Long> implements Principal {
 
     private static final long serialVersionUID = 1L;
@@ -37,6 +41,9 @@ public class Consumer extends AbstractEntity<Long> implements Principal {
 
     @Column(length = 40, nullable = false, unique = true)
     private String secret;
+
+    @Basic(optional = false)
+    private String applicationUrl;
 
     /**
      * Returns consumer key.
@@ -89,6 +96,14 @@ public class Consumer extends AbstractEntity<Long> implements Principal {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getApplicationUrl() {
+        return applicationUrl;
+    }
+
+    public void setApplicationUrl(String applicationUrl) {
+        this.applicationUrl = applicationUrl;
     }
 
     @Override
