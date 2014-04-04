@@ -45,11 +45,7 @@ public class UserBean {
 
     public User createUser(User user) {
         log.info("Creating a new user");
-        AuthToken token = new AuthToken();
         try {
-            token.setId(SecurityUtils.generateSecureHex());
-            token.setUser(user);
-            user.getAuthTokens().add(token);
             user.setPasswordHash(SecurityUtils.createHash(user.getPassword()));
             user.setPassword(null);
         } catch (NoSuchAlgorithmException e) {

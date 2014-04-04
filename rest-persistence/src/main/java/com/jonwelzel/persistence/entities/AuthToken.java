@@ -1,5 +1,6 @@
 package com.jonwelzel.persistence.entities;
 
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,7 +11,7 @@ import javax.persistence.Table;
 import org.codehaus.jackson.annotate.JsonBackReference;
 
 /**
- * Model/pojo for authentication token. It tells what application (3rd party or not) has access to what user resource.
+ * Model/pojo for authentication tokens (OAuth). It tells what application has access to what user's resources.
  * 
  * @author jwelzel
  * 
@@ -35,6 +36,9 @@ public class AuthToken extends AbstractEntity<String> {
     @Column(length = 40)
     private String secret;
 
+    @Basic(optional = true)
+    private String callbackUrl;
+
     public AuthToken() {
     }
 
@@ -42,11 +46,27 @@ public class AuthToken extends AbstractEntity<String> {
         this.id = id;
     }
 
+    public AuthToken(String id, Consumer consumer, String callbackUrl) {
+        this.id = id;
+        this.consumer = consumer;
+        this.callbackUrl = callbackUrl;
+    }
+
+    /**
+     * Returns string representing the token.
+     * 
+     * @return string representing the token
+     */
     @Override
     public String getId() {
         return id;
     }
 
+    /**
+     * Returns consumer this token was issued for.
+     * 
+     * @return consumer this token was issued for.
+     */
     public Consumer getConsumer() {
         return consumer;
     }
@@ -73,12 +93,33 @@ public class AuthToken extends AbstractEntity<String> {
         this.id = id;
     }
 
+    /**
+     * Returns a {@link User} object containing the name of the user the request containing this token is authorized to
+     * act on behalf of. When the oauth filter verifies the request with this token is properly authenticated, it
+     * injects this token into a security context which then delegates
+     * {@link javax.ws.rs.core.SecurityContext#getUserPrincipal()} to this method.
+     * 
+     * @return User corresponding to this token, or null if the token is not authorized
+     */
     public User getUser() {
         return user;
     }
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    /**
+     * Returns callback URL for this token (applicable just to request tokens)
+     * 
+     * @return callback url
+     */
+    public String getCallbackUrl() {
+        return callbackUrl;
+    }
+
+    public void setCallbackUrl(String callbackUrl) {
+        this.callbackUrl = callbackUrl;
     }
 
 }

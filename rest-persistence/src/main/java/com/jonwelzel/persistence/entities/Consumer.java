@@ -63,7 +63,7 @@ public class Consumer extends AbstractEntity<Long> implements Principal {
      * 
      * @return consumer secret
      */
-    String getSecret() {
+    public String getSecret() {
         return secret;
     }
 

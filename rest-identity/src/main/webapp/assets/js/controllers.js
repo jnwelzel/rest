@@ -18,7 +18,7 @@ angular.module('ngIdentity.controllers', [])
       Session.save(
         {}, $scope.master,
         function(success) {
-          SessionService.setToken(success.authTokens[0].id);
+          SessionService.setToken(success.password); // not the actual passwd, it's just the session hash ;)
           SessionService.setUserName(success.firstName + ' ' + success.lastName);
           $window.alert('Successfully logged in.');
           $location.path('/home');
