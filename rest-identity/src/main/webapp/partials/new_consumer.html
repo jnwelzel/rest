@@ -1,0 +1,36 @@
+<ol class="breadcrumb">
+  <li><a href="#home"><i class="fa fa-home"></i> Home</a></li>
+  <li class="active">Developers</li>
+</ol>
+
+<h1>Developers</h1>
+<hr/>
+<h3>Sign up now and gain access to our powerful and easy API!</h3>
+<form class="form-horizontal" role="form">
+  <div class="form-group">
+    <label for="inputName" class="col-xs-2 control-label">Full name</label>
+    <div class="col-xs-4">
+      <input class="form-control" id="inputName" placeholder="John Doe" required ng-model="consumer.name" autofocus>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="inputEmail" class="col-xs-2 control-label">Email</label>
+    <div class="col-xs-4">
+      <input type="email" class="form-control" id="inputEmail" placeholder="john_doe@domain.com" required ng-model="consumer.email">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="inputUrl" class="col-xs-2 control-label">Your application URL</label>
+    <div class="col-xs-4">
+      <input type="url" class="form-control" id="inputUrl" placeholder="http://domain.com" required ng-model="consumer.applicationUrl">
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button class="btn btn-lg btn-primary" ng-click="signUp(consumer)">Sign up</button>
+    </div>
+  </div>
+</form>

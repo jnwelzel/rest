@@ -4,12 +4,21 @@
 
 var userResource = '/rest/users/:id';
 var sessionResource = '/rest/session';
+var consumerResource = '/rest/consumers';
 
 angular.module('ngIdentity.services', ['ngResource'])
   .value('version', '0.1')
   .factory('User', ['$resource', 
     function($resource) {
       return $resource(userResource, {}, {
+        find: {method: 'GET', params: {id: 'id'}},
+        update: {method: 'PUT', params: {id: 'id'}}
+      });
+    }]
+  )
+  .factory('Consumer', ['$resource', 
+    function($resource) {
+      return $resource(consumerResource, {}, {
         find: {method: 'GET', params: {id: 'id'}},
         update: {method: 'PUT', params: {id: 'id'}}
       });

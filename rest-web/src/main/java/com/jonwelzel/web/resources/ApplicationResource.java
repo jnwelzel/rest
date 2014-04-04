@@ -1,4 +1,4 @@
-package com.jonwelzel.web;
+package com.jonwelzel.web.resources;
 
 import javax.ws.rs.ApplicationPath;
 
@@ -9,20 +9,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jonwelzel.web.providers.SecurityFilter;
-import com.jonwelzel.web.resources.OAuth1ConsumerResource;
-import com.jonwelzel.web.resources.OAuth1TokenResource;
-import com.jonwelzel.web.resources.Oauth1AuthorizationResource;
-import com.jonwelzel.web.resources.SessionResourceImpl;
-import com.jonwelzel.web.resources.UserResource;
 
 @ApplicationPath("/")
-public class JaxRsApplication extends ResourceConfig {
+public class ApplicationResource extends ResourceConfig {
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private static final String JACKSON_FEATURE_CLASS = "org.glassfish.jersey.jackson.JacksonFeature";
 
-    public JaxRsApplication() {
+    public ApplicationResource() {
         log.info("Registering JAX-RS application resources...");
         registerComponents();
     }

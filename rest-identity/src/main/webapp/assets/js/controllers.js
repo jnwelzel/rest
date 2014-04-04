@@ -12,6 +12,22 @@ angular.module('ngIdentity.controllers', [])
   .controller('ProfileViewController', ['$scope', function($scope) {
 
   }])
+  .controller('NewDeveloperController', ['$scope', '$location', '$window', 'Consumer', function($scope, $location, $window, Consumer) {
+    $scope.consumer = {};
+    $scope.signUp = function(consumer) {
+      var newConsumer = new Consumer(angular.copy(consumer));
+      newConsumer.$save(
+        {},
+        function(success) {
+          $window.alert('Successfully signed up!\nAPI key: ' + success.key + '\nSecret: ' + success.secret);
+          $location.path('/home');
+        },
+        function(error) {
+          $window.alert('Error: ' + error.data);
+        }
+      );
+    };
+  }])
   .controller('LoginController', ['$scope', 'Session', 'SessionService', '$window', '$location', function($scope, Session, SessionService, $window, $location) {
     $scope.login = function(user) {
       $scope.master = angular.copy(user);
@@ -77,9 +93,9 @@ angular.module('ngIdentity.controllers', [])
     $scope.user = {};
 
     $scope.signUp = function(user) {
-      $scope.master = angular.copy(user);
-      User.save(
-        {}, $scope.master, 
+      var newUser = new User(angular.copy(user));
+      newUser.$save(
+        {},
         function() {
           $window.alert('New user successfully created.');
           $location.path('/home');
