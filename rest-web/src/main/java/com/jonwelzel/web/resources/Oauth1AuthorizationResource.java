@@ -1,6 +1,6 @@
 package com.jonwelzel.web.resources;
 
-import static com.jonwelzel.web.oauth.OAuth1IdentityApiEndpoints.AUTHORIZATION_ROOT_URL;
+import static com.jonwelzel.web.oauth.OAuth1Endpoints.AUTHORIZATION_ROOT_URL;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;

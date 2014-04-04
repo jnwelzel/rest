@@ -1,6 +1,6 @@
 package com.jonwelzel.web.resources;
 
-import static com.jonwelzel.web.oauth.OAuth1IdentityApiEndpoints.CONSUMER_ROOT_URL;
+import static com.jonwelzel.web.oauth.OAuth1Endpoints.CONSUMER_ROOT_URL;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -11,6 +11,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import com.jonwelzel.ejb.consumer.ConsumerBean;
 import com.jonwelzel.persistence.entities.Consumer;
@@ -39,7 +41,8 @@ public class OAuth1ConsumerResource implements Resource<Long, Consumer> {
         try {
             return consumerBean.createConsumer(resource);
         } catch (NoSuchAlgorithmException e) {
-            throw new WebApplicationException("Could not generate consumer keys.");
+            throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR)
+                    .entity("Could not generate consumer keys.").build());
         }
     }
 

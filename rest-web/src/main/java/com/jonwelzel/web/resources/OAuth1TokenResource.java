@@ -1,8 +1,8 @@
 package com.jonwelzel.web.resources;
 
-import static com.jonwelzel.web.oauth.OAuth1IdentityApiEndpoints.ACCESS_TOKEN_URL;
-import static com.jonwelzel.web.oauth.OAuth1IdentityApiEndpoints.REQUEST_TOKEN_URL;
-import static com.jonwelzel.web.oauth.OAuth1IdentityApiEndpoints.TOKEN_ROOT_URL;
+import static com.jonwelzel.web.oauth.OAuth1Endpoints.ACCESS_TOKEN_URL;
+import static com.jonwelzel.web.oauth.OAuth1Endpoints.REQUEST_TOKEN_URL;
+import static com.jonwelzel.web.oauth.OAuth1Endpoints.TOKEN_ROOT_URL;
 import static javax.ws.rs.core.MediaType.APPLICATION_FORM_URLENCODED;
 
 import javax.inject.Inject;
@@ -35,6 +35,7 @@ import com.jonwelzel.web.oauth.OAuthServerRequest;
 @Path(TOKEN_ROOT_URL)
 public class OAuth1TokenResource {
 
+    @Inject
     private OAuth1Signature oAuth1Signature;
 
     @Inject
@@ -50,20 +51,16 @@ public class OAuth1TokenResource {
     @Context
     private ContainerRequestContext requestContext;
 
-    @Path(REQUEST_TOKEN_URL)
-    public Response requestToken() {
-        return null;
-    }
-
     @Path(ACCESS_TOKEN_URL)
     public Response accessToken() {
         return null;
     }
 
     @POST
+    @Path(REQUEST_TOKEN_URL)
     @Consumes(APPLICATION_FORM_URLENCODED)
     @Produces(APPLICATION_FORM_URLENCODED)
-    public AuthToken newRequestToken(String consumerKey, String callbackUrl) {
+    public AuthToken newRequestToken() {
         // Request validation comes first
         OAuthServerRequest request = new OAuthServerRequest(requestContext);
         OAuth1Parameters params = new OAuth1Parameters();
@@ -101,7 +98,7 @@ public class OAuth1TokenResource {
         }
 
         // If all is good persist this token
-        AuthToken token = authTokenBean.newRequestToken(consumerKey, callbackUrl);
+        AuthToken token = authTokenBean.newRequestToken(consKey, params.getCallback());
         if (token == null) {
             throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR)
                     .entity("Could not generate security information.").build());
