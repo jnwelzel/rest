@@ -48,9 +48,6 @@ public class OAuth1TokenResource {
     @Inject
     private ConsumerBean consumerBean;
 
-    @Context
-    private ContainerRequestContext requestContext;
-
     @Path(ACCESS_TOKEN_URL)
     public Response accessToken() {
         return null;
@@ -60,7 +57,7 @@ public class OAuth1TokenResource {
     @Path(REQUEST_TOKEN_URL)
     @Consumes(APPLICATION_FORM_URLENCODED)
     @Produces(APPLICATION_FORM_URLENCODED)
-    public AuthToken newRequestToken() {
+    public AuthToken newRequestToken(@Context ContainerRequestContext requestContext) {
         // Request validation comes first
         OAuthServerRequest request = new OAuthServerRequest(requestContext);
         OAuth1Parameters params = new OAuth1Parameters();

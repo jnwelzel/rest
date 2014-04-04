@@ -8,7 +8,7 @@ import org.glassfish.jersey.server.mvc.freemarker.FreemarkerMvcFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jonwelzel.web.providers.SecurityFilter;
+import com.jonwelzel.web.oauth.OAuth1ServerFilter;
 
 @ApplicationPath("/")
 public class ApplicationResource extends ResourceConfig {
@@ -31,7 +31,7 @@ public class ApplicationResource extends ResourceConfig {
         register(OAuth1ConsumerResource.class);
 
         // Sec + Auth
-        register(SecurityFilter.class);
+        register(OAuth1ServerFilter.class);
         register(RolesAllowedDynamicFeature.class); // Important for auth in JAX-RS using annotations
 
         // Others
