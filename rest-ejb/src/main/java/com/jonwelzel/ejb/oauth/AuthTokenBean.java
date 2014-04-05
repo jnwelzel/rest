@@ -29,11 +29,6 @@ public class AuthTokenBean {
 	@EJB
 	private ConsumerDao consumerDao;
 
-	public boolean isValidToken(String token) {
-		log.info("Checking if token is valid");
-		return tokenDao.find(token) != null;
-	}
-
 	public AuthToken find(String id) {
 		return tokenDao.find(id);
 	}

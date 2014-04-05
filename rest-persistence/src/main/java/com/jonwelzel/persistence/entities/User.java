@@ -33,144 +33,144 @@ import com.jonwelzel.persistence.enumerations.RoleType;
 @Entity
 @Table(name = "APP_USER")
 @NamedQueries(value = { @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = :email"),
-        @NamedQuery(name = "User.findByToken", query = "SELECT u FROM User u JOIN u.authTokens a WHERE a = :authToken") })
+		@NamedQuery(name = "User.findByToken", query = "SELECT u FROM User u JOIN u.authTokens a WHERE a = :authToken") })
 public class User extends AbstractEntity<Long> implements Principal {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    @Id
-    @SequenceGenerator(name = "app_user_seq", allocationSize = 1, initialValue = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "app_user_seq")
-    @Column(name = "ID")
-    private Long id;
+	@Id
+	@SequenceGenerator(name = "app_user_seq", allocationSize = 1, initialValue = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "app_user_seq")
+	@Column(name = "ID")
+	private Long id;
 
-    @Column(length = 128, nullable = false)
-    private String firstName;
+	@Column(length = 128, nullable = false)
+	private String firstName;
 
-    @Column(length = 128, nullable = false)
-    private String lastName;
+	@Column(length = 128, nullable = false)
+	private String lastName;
 
-    @Column(length = 30, unique = true, nullable = false)
-    private String alias;
+	@Column(length = 30, unique = true, nullable = false)
+	private String alias;
 
-    @Column(length = 80, nullable = false, unique = true)
-    private String email;
+	@Column(length = 80, nullable = false, unique = true)
+	private String email;
 
-    @Transient
-    private String password;
+	@Transient
+	private String password;
 
-    @Column(nullable = false)
-    private String passwordHash;
+	@Column(nullable = false)
+	private String passwordHash;
 
-    @ManyToMany(mappedBy = "users")
-    private List<Company> companies;
+	@ManyToMany(mappedBy = "users")
+	private List<Company> companies;
 
-    @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.REMOVE }, orphanRemoval = true, mappedBy = "user")
-    @JsonManagedReference
-    private List<AuthToken> authTokens = new ArrayList<>();
+	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.REMOVE }, orphanRemoval = true, mappedBy = "user")
+	@JsonManagedReference(value = "user")
+	private List<AuthToken> authTokens = new ArrayList<>();
 
-    @Enumerated(EnumType.STRING)
-    @OneToMany(orphanRemoval = true)
-    private List<RoleType> roles;
+	@Enumerated(EnumType.STRING)
+	@OneToMany(orphanRemoval = true)
+	private List<RoleType> roles;
 
-    public User() {
-    }
+	public User() {
+	}
 
-    public User(Long id, String name) {
-        this.id = id;
-        this.firstName = name;
-    }
+	public User(Long id, String name) {
+		this.id = id;
+		this.firstName = name;
+	}
 
-    @Override
-    public Long getId() {
-        return id;
-    }
+	@Override
+	public Long getId() {
+		return id;
+	}
 
-    @Override
-    public void setId(Long id) {
-        this.id = id;
-    }
+	@Override
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public String getFirstName() {
-        return firstName;
-    }
+	public String getFirstName() {
+		return firstName;
+	}
 
-    public void setFirstName(String name) {
-        this.firstName = name;
-    }
+	public void setFirstName(String name) {
+		this.firstName = name;
+	}
 
-    public String getLastName() {
-        return lastName;
-    }
+	public String getLastName() {
+		return lastName;
+	}
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
 
-    public String getEmail() {
-        return email;
-    }
+	public String getEmail() {
+		return email;
+	}
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-    public String getPassword() {
-        return password;
-    }
+	public String getPassword() {
+		return password;
+	}
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
-    public List<Company> getCompanies() {
-        return companies;
-    }
+	public List<Company> getCompanies() {
+		return companies;
+	}
 
-    public void setCompanies(List<Company> companies) {
-        this.companies = companies;
-    }
+	public void setCompanies(List<Company> companies) {
+		this.companies = companies;
+	}
 
-    public List<AuthToken> getAuthTokens() {
-        return authTokens;
-    }
+	public List<AuthToken> getAuthTokens() {
+		return authTokens;
+	}
 
-    public void setAuthTokens(List<AuthToken> authTokens) {
-        this.authTokens = authTokens;
-    }
+	public void setAuthTokens(List<AuthToken> authTokens) {
+		this.authTokens = authTokens;
+	}
 
-    public String getPasswordHash() {
-        return passwordHash;
-    }
+	public String getPasswordHash() {
+		return passwordHash;
+	}
 
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
-    }
+	public void setPasswordHash(String passwordHash) {
+		this.passwordHash = passwordHash;
+	}
 
-    public List<RoleType> getRoles() {
-        return roles;
-    }
+	public List<RoleType> getRoles() {
+		return roles;
+	}
 
-    public void setRoles(List<RoleType> roles) {
-        this.roles = roles;
-    }
+	public void setRoles(List<RoleType> roles) {
+		this.roles = roles;
+	}
 
-    public String getAlias() {
-        return alias;
-    }
+	public String getAlias() {
+		return alias;
+	}
 
-    public void setAlias(String alias) {
-        this.alias = alias;
-    }
+	public void setAlias(String alias) {
+		this.alias = alias;
+	}
 
-    @Override
-    public String toString() {
-        return "User{" + "id=" + id + ", name='" + getFirstName() + " " + getLastName() + "', email='" + getEmail()
-                + "', username='" + getAlias() + "'}";
-    }
+	@Override
+	public String toString() {
+		return "User{" + "id=" + id + ", name='" + getFirstName() + " " + getLastName() + "', email='" + getEmail()
+				+ "', username='" + getAlias() + "'}";
+	}
 
-    @Override
-    public String getName() {
-        return firstName + " " + lastName + " (" + email + ")";
-    }
+	@Override
+	public String getName() {
+		return firstName + " " + lastName + " (" + email + ")";
+	}
 }

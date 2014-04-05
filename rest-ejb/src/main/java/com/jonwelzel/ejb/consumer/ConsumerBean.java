@@ -38,4 +38,13 @@ public class ConsumerBean {
 		return consumerDao.findByKey(consumerKey);
 	}
 
+	/**
+	 * Find a Consumer by an oAuth token.
+	 * 
+	 * @param authToken The token that's automatically generated for this user.
+	 * @return The Consumer or null.
+	 */
+	public Consumer findByToken(String oauthToken) {
+		return consumerDao.findByToken(oauthToken);
+	}
 }

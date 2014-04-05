@@ -31,4 +31,15 @@ public class ConsumerDao extends AbstractJpaDao<Long, Consumer> {
 		return result;
 	}
 
+	public Consumer findByToken(String token) {
+		TypedQuery<Consumer> query = getEntityManager().createNamedQuery("Consumer.findByToken", Consumer.class);
+		query.setParameter("authToken", token);
+		Consumer dbConsumer = null;
+		try {
+			dbConsumer = query.getSingleResult();
+		} catch (NoResultException e) {
+		}
+		return dbConsumer;
+	}
+
 }

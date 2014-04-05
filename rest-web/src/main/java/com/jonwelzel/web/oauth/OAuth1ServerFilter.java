@@ -79,6 +79,8 @@ public class OAuth1ServerFilter implements ContainerRequestFilter {
 	 */
 	private String authHeader;
 
+	private String oauthToken;
+
 	public OAuth1ServerFilter() {
 		// establish supported OAuth protocol versions
 		HashSet<String> v = new HashSet<String>();
@@ -94,11 +96,18 @@ public class OAuth1ServerFilter implements ContainerRequestFilter {
 		SecurityContext securityContext = new SecurityContextImpl(null);
 		authHeader = requestContext.getHeaderString(OAuth1Parameters.AUTHORIZATION_HEADER);
 
+		if (requestContext.getUriInfo().getQueryParameters().containsKey(OAuth1Parameters.TOKEN)) {
+			oauthToken = requestContext.getUriInfo().getQueryParameters().get(OAuth1Parameters.TOKEN).get(0);
+		}
+
 		// do not filter requests that do not use OAuth authentication
 		if (authHeader != null && authHeader.toUpperCase().startsWith(OAuth1Parameters.SCHEME.toUpperCase())) {
 			securityContext = filterOAuth(requestContext);
 		} else if (authHeader != null) {
 			securityContext = filterOther(requestContext);
+		} else if (oauthToken != null && !"".equals(oauthToken)) {
+			requestContext.setSecurityContext(new OAuth1SecurityContext(consumerBean.findByToken(oauthToken), false));
+			return;
 		}
 
 		requestContext.setSecurityContext(securityContext);

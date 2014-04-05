@@ -1,6 +1,7 @@
 package com.jonwelzel.persistence.entities;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Basic;
@@ -8,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,6 +17,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
+
+import org.codehaus.jackson.annotate.JsonManagedReference;
 
 import com.jonwelzel.persistence.enumerations.RoleType;
 
@@ -25,7 +29,9 @@ import com.jonwelzel.persistence.enumerations.RoleType;
  * 
  */
 @Entity
-@NamedQueries(value = { @NamedQuery(name = "Consumer.findByKey", query = "SELECT c from Consumer c where c.key = :key") })
+@NamedQueries(value = {
+		@NamedQuery(name = "Consumer.findByKey", query = "SELECT c from Consumer c where c.key = :key"),
+		@NamedQuery(name = "Consumer.findByToken", query = "SELECT c FROM Consumer c JOIN c.authTokens a WHERE a.id = :authToken") })
 public class Consumer extends AbstractEntity<Long> implements Principal {
 
 	private static final long serialVersionUID = 1L;
@@ -50,6 +56,10 @@ public class Consumer extends AbstractEntity<Long> implements Principal {
 
 	@Basic(optional = false)
 	private String applicationUrl;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "consumer")
+	@JsonManagedReference(value = "consumer")
+	private List<AuthToken> authTokens = new ArrayList<>();
 
 	@Enumerated(EnumType.STRING)
 	@OneToMany(orphanRemoval = true)
@@ -122,6 +132,14 @@ public class Consumer extends AbstractEntity<Long> implements Principal {
 
 	public void setRoles(List<RoleType> roles) {
 		this.roles = roles;
+	}
+
+	public List<AuthToken> getAuthTokens() {
+		return authTokens;
+	}
+
+	public void setAuthTokens(List<AuthToken> authTokens) {
+		this.authTokens = authTokens;
 	}
 
 	@Override

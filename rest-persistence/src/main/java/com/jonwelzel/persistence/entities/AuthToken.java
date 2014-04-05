@@ -1,6 +1,7 @@
 package com.jonwelzel.persistence.entities;
 
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -28,10 +29,11 @@ public class AuthToken extends AbstractEntity<String> {
 	private String id;
 
 	@ManyToOne(optional = true, fetch = FetchType.LAZY)
-	@JsonBackReference
+	@JsonBackReference(value = "user")
 	private User user;
 
-	@ManyToOne(optional = false, fetch = FetchType.LAZY)
+	@ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@JsonBackReference(value = "consumer")
 	private Consumer consumer;
 
 	@Column(length = 40)

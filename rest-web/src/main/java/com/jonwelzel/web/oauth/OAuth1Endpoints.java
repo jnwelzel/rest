@@ -13,5 +13,5 @@ public class OAuth1Endpoints {
 
 	/** Resource paths that should be ignored by the OAuth filter */
 	public static final List<String> pathsToIgnore = Arrays.asList(TOKEN_ROOT_URL + "/" + ACCESS_TOKEN_URL,
-			TOKEN_ROOT_URL + "/" + REQUEST_TOKEN_URL);
+			TOKEN_ROOT_URL + "/" + REQUEST_TOKEN_URL, AUTHORIZATION_ROOT_URL);
 }

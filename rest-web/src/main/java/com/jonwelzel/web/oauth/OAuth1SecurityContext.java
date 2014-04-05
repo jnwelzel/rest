@@ -14,7 +14,7 @@ import com.jonwelzel.persistence.enumerations.RoleType;
  * 
  * @author Martin Matula
  */
-class OAuth1SecurityContext implements SecurityContext {
+public class OAuth1SecurityContext implements SecurityContext {
 	private final Consumer consumer;
 	private final AuthToken token;
 	private final boolean isSecure;
@@ -32,7 +32,8 @@ class OAuth1SecurityContext implements SecurityContext {
 	}
 
 	/**
-	 * Create a new OAuth security context from {@link OAuth1Token Access Token}.
+	 * Create a new OAuth security context from {@link OAuth1Token Access Token}
+	 * .
 	 * 
 	 * @param token Access Token.
 	 * @param isSecure {@code true} if the request is secured over SSL (HTTPS).
@@ -50,8 +51,8 @@ class OAuth1SecurityContext implements SecurityContext {
 
 	@Override
 	public boolean isUserInRole(String role) {
-		return consumer == null ? token.getUser().getRoles().contains(RoleType.valueOf(role)) : 
-			consumer.getRoles().contains(RoleType.valueOf(role));
+		return consumer == null ? token.getUser().getRoles().contains(RoleType.valueOf(role)) : consumer.getRoles()
+				.contains(RoleType.valueOf(role));
 	}
 
 	@Override
@@ -64,4 +65,7 @@ class OAuth1SecurityContext implements SecurityContext {
 		return OAuth1Parameters.SCHEME;
 	}
 
+	public Consumer getConsumer() {
+		return consumer;
+	}
 }
