@@ -1,30 +1,32 @@
 package com.jonwelzel.web.oauth;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+@ApplicationScoped
 public class OAuth1SignatureMethodFactory {
 
-    @Inject
-    private static HmaSha1Method hmaSha1;
+	@Inject
+	private HmaSha1Method hmaSha1;
 
-    @Inject
-    private static RsaSha1Method rsaSha1;
+	@Inject
+	private RsaSha1Method rsaSha1;
 
-    @Inject
-    private static PlaintextMethod plaintext;
+	@Inject
+	private PlaintextMethod plaintext;
 
-    public static OAuth1SignatureMethod getMethod(String method) {
-        switch (method) {
-        case HmaSha1Method.NAME:
-            return hmaSha1;
-        case RsaSha1Method.NAME:
-            return rsaSha1;
-        case PlaintextMethod.NAME:
-            return plaintext;
-        default:
-            break;
-        }
-        return null;
-    }
+	public OAuth1SignatureMethod getMethod(String method) {
+		switch (method) {
+		case HmaSha1Method.NAME:
+			return hmaSha1;
+		case RsaSha1Method.NAME:
+			return rsaSha1;
+		case PlaintextMethod.NAME:
+			return plaintext;
+		default:
+			break;
+		}
+		return null;
+	}
 
 }

@@ -19,47 +19,46 @@ import com.jonwelzel.util.SecurityUtils;
 @LocalBean
 public class AuthTokenBean {
 
-    @Inject
-    @Log
-    private Logger log;
+	@Inject
+	@Log
+	private Logger log;
 
-    @EJB
-    private AuthTokenDao tokenDao;
+	@EJB
+	private AuthTokenDao tokenDao;
 
-    @EJB
-    private ConsumerDao consumerDao;
+	@EJB
+	private ConsumerDao consumerDao;
 
-    public boolean isValidToken(String token) {
-        log.info("Checking if token is valid");
-        return tokenDao.find(token) != null;
-    }
+	public boolean isValidToken(String token) {
+		log.info("Checking if token is valid");
+		return tokenDao.find(token) != null;
+	}
 
-    public AuthToken find(String id) {
-        return tokenDao.find(id);
-    }
+	public AuthToken find(String id) {
+		return tokenDao.find(id);
+	}
 
-    /**
-     * Creates a new request token for a given consumerKey.
-     * 
-     * @param consumerKey
-     *            consumer key to create a request token for
-     * @param callbackUrl
-     *            callback url for this request token request
-     * @return new request token
-     */
-    public AuthToken newRequestToken(String consumerKey, String callbackUrl) {
-        AuthToken token = null;
-        Consumer consumer = consumerDao.findByKey(consumerKey);
-        if (consumer != null) {
-            try {
-                token = new AuthToken(SecurityUtils.generateSecureHex(), consumer, callbackUrl);
-                token.setConsumer(consumer);
-                token.setCallbackUrl(callbackUrl);
-                token = tokenDao.save(token);
-            } catch (NoSuchAlgorithmException e) {
-                log.error("Algorithm not found, could not generate secure hash.", e);
-            }
-        }
-        return token;
-    }
+	/**
+	 * Creates a new request token for a given consumerKey.
+	 * 
+	 * @param consumerKey consumer key to create a request token for
+	 * @param callbackUrl callback url for this request token request
+	 * @return new request token
+	 */
+	public AuthToken newRequestToken(String consumerKey, String callbackUrl) {
+		AuthToken token = null;
+		Consumer consumer = consumerDao.findByKey(consumerKey);
+		if (consumer != null) {
+			try {
+				token = new AuthToken(SecurityUtils.generateSecureHex(), SecurityUtils.generateSecureHex(), consumer,
+						callbackUrl);
+				token.setConsumer(consumer);
+				token.setCallbackUrl(callbackUrl);
+				token = tokenDao.save(token);
+			} catch (NoSuchAlgorithmException e) {
+				log.error("Algorithm not found, could not generate secure hash.", e);
+			}
+		}
+		return token;
+	}
 }

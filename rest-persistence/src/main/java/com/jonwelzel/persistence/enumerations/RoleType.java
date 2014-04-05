@@ -8,6 +8,6 @@ package com.jonwelzel.persistence.enumerations;
  */
 public enum RoleType {
 
-    ADMIN, USER;
+	ADMIN, USER, CONSUMER;
 
 }

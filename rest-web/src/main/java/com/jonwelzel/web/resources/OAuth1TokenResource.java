@@ -13,6 +13,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
@@ -35,71 +36,75 @@ import com.jonwelzel.web.oauth.OAuthServerRequest;
 @Path(TOKEN_ROOT_URL)
 public class OAuth1TokenResource {
 
-    @Inject
-    private OAuth1Signature oAuth1Signature;
+	@Inject
+	private OAuth1Signature oAuth1Signature;
 
-    @Inject
-    private AuthTokenBean authTokenBean;
+	@Inject
+	private AuthTokenBean authTokenBean;
 
-    @Inject
-    @Log
-    private Logger log;
+	@Inject
+	@Log
+	private Logger log;
 
-    @Inject
-    private ConsumerBean consumerBean;
+	@Inject
+	private ConsumerBean consumerBean;
 
-    @Path(ACCESS_TOKEN_URL)
-    public Response accessToken() {
-        return null;
-    }
+	@Path(ACCESS_TOKEN_URL)
+	public Response accessToken() {
+		return null;
+	}
 
-    @POST
-    @Path(REQUEST_TOKEN_URL)
-    @Consumes(APPLICATION_FORM_URLENCODED)
-    @Produces(APPLICATION_FORM_URLENCODED)
-    public AuthToken newRequestToken(@Context ContainerRequestContext requestContext) {
-        // Request validation comes first
-        OAuthServerRequest request = new OAuthServerRequest(requestContext);
-        OAuth1Parameters params = new OAuth1Parameters();
-        params.readRequest(request);
-        String tok = params.getToken();
-        if ((tok != null) && (!tok.contentEquals(""))) {
-            throw new OAuth1Exception(Response.Status.BAD_REQUEST, null);
-        }
+	@POST
+	@Path(REQUEST_TOKEN_URL)
+	@Consumes(APPLICATION_FORM_URLENCODED)
+	@Produces(APPLICATION_FORM_URLENCODED)
+	public Response newRequestToken(@Context ContainerRequestContext requestContext) {
+		// Request validation comes first
+		OAuthServerRequest request = new OAuthServerRequest(requestContext);
+		OAuth1Parameters params = new OAuth1Parameters();
+		params.readRequest(request);
+		String tok = params.getToken();
+		if ((tok != null) && (!tok.contentEquals(""))) {
+			throw new OAuth1Exception(Response.Status.BAD_REQUEST, null);
+		}
 
-        String consKey = params.getConsumerKey();
-        if (consKey == null) {
-            throw new OAuth1Exception(Response.Status.BAD_REQUEST, null);
-        }
+		String consKey = params.getConsumerKey();
+		if (consKey == null) {
+			throw new OAuth1Exception(Response.Status.BAD_REQUEST, null);
+		}
 
-        Consumer consumer = consumerBean.findByKey(consKey);
-        if (consumer == null) {
-            throw new OAuth1Exception(Response.Status.BAD_REQUEST, null);
-        }
-        OAuth1Secrets secrets = new OAuth1Secrets().consumerSecret(consumer.getSecret()).tokenSecret("");
+		Consumer consumer = consumerBean.findByKey(consKey);
+		if (consumer == null) {
+			throw new OAuth1Exception(Response.Status.BAD_REQUEST, null);
+		}
+		OAuth1Secrets secrets = new OAuth1Secrets().consumerSecret(consumer.getSecret()).tokenSecret("");
 
-        boolean sigIsOk = false;
-        try {
-            sigIsOk = oAuth1Signature.verify(request, params, secrets);
-        } catch (OAuth1SignatureException ex) {
-            log.error(null, ex);
-        }
+		boolean sigIsOk = false;
+		try {
+			sigIsOk = oAuth1Signature.verify(request, params, secrets);
+		} catch (OAuth1SignatureException ex) {
+			log.error(null, ex);
+		}
 
-        if (!sigIsOk) {
-            throw new OAuth1Exception(Response.Status.BAD_REQUEST, null);
-        }
+		if (!sigIsOk) {
+			throw new OAuth1Exception(Response.Status.BAD_REQUEST, null);
+		}
 
-        MultivaluedMap<String, String> parameters = new MultivaluedHashMap<String, String>();
-        for (String n : request.getParameterNames()) {
-            parameters.put(n, request.getParameterValues(n));
-        }
+		MultivaluedMap<String, String> parameters = new MultivaluedHashMap<String, String>();
+		for (String n : request.getParameterNames()) {
+			parameters.put(n, request.getParameterValues(n));
+		}
 
-        // If all is good persist this token
-        AuthToken token = authTokenBean.newRequestToken(consKey, params.getCallback());
-        if (token == null) {
-            throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR)
-                    .entity("Could not generate security information.").build());
-        }
-        return token;
-    }
+		// If all is good persist this token
+		AuthToken token = authTokenBean.newRequestToken(consKey, params.getCallback());
+		if (token == null) {
+			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR)
+					.entity("Could not generate security information.").build());
+		}
+		Form resp = new Form();
+		resp.param(OAuth1Parameters.TOKEN, token.getId());
+		resp.param(OAuth1Parameters.TOKEN_SECRET, token.getSecret());
+		resp.param(OAuth1Parameters.CALLBACK_CONFIRMED, "true");
+		return Response.ok(resp).build();
+	}
 }
