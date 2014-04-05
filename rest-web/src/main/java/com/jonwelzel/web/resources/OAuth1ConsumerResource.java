@@ -15,9 +15,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.SecurityContext;
 
 import com.jonwelzel.ejb.consumer.ConsumerBean;
 import com.jonwelzel.persistence.entities.Consumer;
@@ -27,46 +29,46 @@ import com.jonwelzel.persistence.entities.Consumer;
 @Produces(MediaType.APPLICATION_JSON)
 public class OAuth1ConsumerResource implements Resource<Long, Consumer> {
 
-    @Inject
-    private ConsumerBean consumerBean;
+	@Inject
+	private ConsumerBean consumerBean;
 
-    @Override
-    @GET
-    public List<Consumer> getResources() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	@Override
+	@GET
+	public List<Consumer> getResources() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    @Override
-    @GET
-    @Path("{id}")
-    public Consumer getResource(@PathParam("id") Long id) {
-        return consumerBean.findConsumer(id);
-    }
+	@Override
+	@GET
+	@Path("{id}")
+	public Consumer getResource(@PathParam("id") Long id) {
+		return consumerBean.findConsumer(id);
+	}
 
-    @Override
-    @POST
-    public Consumer createResource(Consumer resource) {
-        try {
-            return consumerBean.createConsumer(resource);
-        } catch (NoSuchAlgorithmException e) {
-            throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR)
-                    .entity("Could not generate consumer keys.").build());
-        }
-    }
+	@Override
+	@POST
+	public Consumer createResource(Consumer resource, @Context SecurityContext securityContext) {
+		try {
+			return consumerBean.createConsumer(resource);
+		} catch (NoSuchAlgorithmException e) {
+			throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR)
+					.entity("Could not generate consumer keys.").build());
+		}
+	}
 
-    @Override
-    @PUT
-    public Consumer updateResource(Consumer resource) {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	@Override
+	@PUT
+	public Consumer updateResource(Consumer resource) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    @Override
-    @DELETE
-    public void deleteResource(Long id) {
-        // TODO Auto-generated method stub
+	@Override
+	@DELETE
+	public void deleteResource(Long id) {
+		// TODO Auto-generated method stub
 
-    }
+	}
 
 }

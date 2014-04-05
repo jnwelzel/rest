@@ -39,52 +39,49 @@ import com.jonwelzel.persistence.enumerations.RoleType;
 @RolesAllowed(value = { "USER", "ADMIN" })
 public class UserResource implements Resource<Long, User> {
 
-    @Inject
-    @Log
-    private Logger log;
+	@Inject
+	@Log
+	private Logger log;
 
-    @Inject
-    private UserBean userBean;
+	@Inject
+	private UserBean userBean;
 
-    @Context
-    private SecurityContext securityContext;
+	@Override
+	@GET
+	@PermitAll
+	public List<User> getResources() {
+		return userBean.findAll();
+	}
 
-    @Override
-    @GET
-    @PermitAll
-    public List<User> getResources() {
-        return userBean.findAll();
-    }
+	@Override
+	@GET
+	@Path("{id}")
+	public User getResource(@PathParam("id") Long id) {
+		// TODO Tratar com um 404 NOT FOUND caso n exista User com id passado
+		return userBean.findUser(id);
+	}
 
-    @Override
-    @GET
-    @Path("{id}")
-    public User getResource(@PathParam("id") Long id) {
-        // TODO Tratar com um 404 NOT FOUND caso n exista User com id passado
-        return userBean.findUser(id);
-    }
+	@Override
+	@POST
+	@PermitAll
+	public User createResource(User resource, @Context SecurityContext securityContext) {
+		if (!securityContext.isUserInRole(RoleType.ADMIN.toString())) {
+			resource.setRoles(Arrays.asList(RoleType.USER)); // Only admin can make other admin
+		}
+		return userBean.createUser(resource);
+	}
 
-    @Override
-    @POST
-    @PermitAll
-    public User createResource(User resource) {
-        if (!securityContext.isUserInRole(RoleType.ADMIN.toString())) {
-            resource.setRoles(Arrays.asList(RoleType.USER)); // Only admin can make other admin
-        }
-        return userBean.createUser(resource);
-    }
+	@Override
+	@PUT
+	public User updateResource(User resource) {
+		return userBean.updateUser(resource);
+	}
 
-    @Override
-    @PUT
-    public User updateResource(User resource) {
-        return userBean.updateUser(resource);
-    }
-
-    @Override
-    @DELETE
-    @Path("{id}")
-    public void deleteResource(@PathParam("id") Long id) {
-        userBean.deleteUser(id);
-    }
+	@Override
+	@DELETE
+	@Path("{id}")
+	public void deleteResource(@PathParam("id") Long id) {
+		userBean.deleteUser(id);
+	}
 
 }
