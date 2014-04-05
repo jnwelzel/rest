@@ -2,7 +2,7 @@
 
 /* Controllers */
 
-angular.module('ngIdentity.controllers', [])
+angular.module('ngRest.controllers', [])
   .controller('HomeController', ['$scope', 'User', function($scope, User) {
     $scope.users = User.query();
   }])

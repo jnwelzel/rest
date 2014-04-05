@@ -35,6 +35,12 @@ public class OAuth1Parameters extends HashMap<String, String> {
 	 */
 	public static final String CONSUMER_DOMAIN = "oauth_consumer_domain";
 
+	/**
+	 * Name of parameter containing the consumer name. Might be a company's name
+	 * or an individual's name.
+	 */
+	public static final String CONSUMER_NAME = "oauth_consumer_name";
+
 	/** Name of parameter containing the access/request token. */
 	public static final String TOKEN = "oauth_token";
 

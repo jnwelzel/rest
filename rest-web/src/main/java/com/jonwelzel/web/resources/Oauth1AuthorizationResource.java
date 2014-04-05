@@ -13,9 +13,9 @@ import javax.ws.rs.core.SecurityContext;
 
 import org.glassfish.jersey.server.mvc.Viewable;
 
+import com.jonwelzel.persistence.entities.Consumer;
 import com.jonwelzel.web.oauth.OAuth1Exception;
 import com.jonwelzel.web.oauth.OAuth1Parameters;
-import com.jonwelzel.web.oauth.OAuth1SecurityContext;
 
 @Path(AUTHORIZATION_ROOT_URL)
 public class Oauth1AuthorizationResource {
@@ -32,10 +32,9 @@ public class Oauth1AuthorizationResource {
 		}
 		Form form = new Form();
 		form.param(OAuth1Parameters.TOKEN, oauthToken);
-		form.param(OAuth1Parameters.CONSUMER_DOMAIN, ((OAuth1SecurityContext) securityContext).getConsumer()
-				.getApplicationUrl());
+		form.param(OAuth1Parameters.CONSUMER_NAME, securityContext.getUserPrincipal().getName());
+		form.param(OAuth1Parameters.CONSUMER_DOMAIN, ((Consumer) securityContext.getUserPrincipal()).getApplicationUrl());
 		return new Viewable("/authorization/login.ftl", form);
-		// return new Viewable("/authorization/authorize.ftl", null);
 	}
 
 }
