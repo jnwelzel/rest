@@ -4,7 +4,6 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -54,8 +53,11 @@ public class Consumer extends AbstractEntity<Long> implements Principal {
 	@Column(length = 40, nullable = false, unique = true)
 	private String secret;
 
-	@Basic(optional = false)
+	@Column(nullable = false, unique = true)
 	private String applicationUrl;
+
+	@Column(nullable = false, unique = true)
+	private String applicationName;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "consumer")
 	@JsonManagedReference(value = "consumer")
@@ -124,6 +126,14 @@ public class Consumer extends AbstractEntity<Long> implements Principal {
 
 	public void setApplicationUrl(String applicationUrl) {
 		this.applicationUrl = applicationUrl;
+	}
+
+	public String getApplicationName() {
+		return applicationName;
+	}
+
+	public void setApplicationName(String applicationName) {
+		this.applicationName = applicationName;
 	}
 
 	public List<RoleType> getRoles() {

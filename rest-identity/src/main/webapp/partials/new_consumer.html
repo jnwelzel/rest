@@ -27,7 +27,14 @@
       <input type="url" class="form-control" id="inputUrl" placeholder="http://domain.com" required ng-model="consumer.applicationUrl">
     </div>
   </div>
-  
+
+  <div class="form-group">
+    <label for="inputAppName" class="col-xs-2 control-label">Your application name</label>
+    <div class="col-xs-4">
+      <input type="text" class="form-control" id="inputAppName" placeholder="Hello World" required ng-model="consumer.applicationName">
+    </div>
+  </div>
+
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
       <button class="btn btn-lg btn-primary" ng-click="signUp(consumer)">Sign up</button>
