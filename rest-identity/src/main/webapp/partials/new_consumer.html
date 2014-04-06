@@ -36,6 +36,13 @@
   </div>
 
   <div class="form-group">
+    <label for="inputAppDesc" class="col-xs-2 control-label">Your application description</label>
+    <div class="col-xs-4">
+      <textarea class="form-control" rows="3" id="inputAppDesc" placeholder="Just a dummy application to verify if this API really works." required ng-model="consumer.applicationDescription"></textarea>
+    </div>
+  </div>
+
+  <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
       <button class="btn btn-lg btn-primary" ng-click="signUp(consumer)">Sign up</button>
     </div>

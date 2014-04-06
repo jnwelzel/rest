@@ -59,6 +59,9 @@ public class Consumer extends AbstractEntity<Long> implements Principal {
 	@Column(nullable = false, unique = true)
 	private String applicationName;
 
+	@Column(nullable = false, length = 2000)
+	private String applicationDescription;
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "consumer")
 	@JsonManagedReference(value = "consumer")
 	private List<AuthToken> authTokens = new ArrayList<>();
@@ -134,6 +137,14 @@ public class Consumer extends AbstractEntity<Long> implements Principal {
 
 	public void setApplicationName(String applicationName) {
 		this.applicationName = applicationName;
+	}
+
+	public String getApplicationDescription() {
+		return applicationDescription;
+	}
+
+	public void setApplicationDescription(String applicationDescription) {
+		this.applicationDescription = applicationDescription;
 	}
 
 	public List<RoleType> getRoles() {

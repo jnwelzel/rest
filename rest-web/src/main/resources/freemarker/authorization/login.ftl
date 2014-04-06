@@ -135,7 +135,7 @@
   <script>
     'use strict';
 
-    var sessionResource = '/session';
+    var sessionResource = '/authorization/login';
 
     var app = angular.module('restLoginApp', ['ngResource']);
     app.factory('Session', ['$resource',
@@ -153,6 +153,7 @@
           {}, $scope.user,
           function(success) {
             // redirect to authorization page
+            console.log('Login successful');
           },
           function(error) {
             console.log('Error ' + error.data);
