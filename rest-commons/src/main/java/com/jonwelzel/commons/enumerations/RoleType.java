@@ -1,4 +1,4 @@
-package com.jonwelzel.persistence.enumerations;
+package com.jonwelzel.commons.enumerations;
 
 /**
  * Application-level role types.

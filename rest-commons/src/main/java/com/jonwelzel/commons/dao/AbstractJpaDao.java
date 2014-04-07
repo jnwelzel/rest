@@ -1,4 +1,4 @@
-package com.jonwelzel.persistence.dao.generic;
+package com.jonwelzel.commons.dao;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
@@ -7,7 +7,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
-import com.jonwelzel.persistence.entities.AbstractEntity;
+import com.jonwelzel.commons.entities.AbstractEntity;
 
 /**
  * Abstract implementation of {@link GenericDao} using the JPA spec. Not to be used by itself (standalone) because it

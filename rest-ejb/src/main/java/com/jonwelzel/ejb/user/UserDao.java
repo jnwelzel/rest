@@ -6,9 +6,9 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-import com.jonwelzel.persistence.dao.generic.AbstractJpaDao;
-import com.jonwelzel.persistence.entities.AuthToken;
-import com.jonwelzel.persistence.entities.User;
+import com.jonwelzel.commons.dao.AbstractJpaDao;
+import com.jonwelzel.commons.entities.Token;
+import com.jonwelzel.commons.entities.User;
 
 /**
  * DAO for {@link User}.
@@ -38,7 +38,7 @@ public class UserDao extends AbstractJpaDao<Long, User> {
         return dbUser;
     }
 
-    public User findByToken(AuthToken authToken) {
+    public User findByToken(Token authToken) {
         TypedQuery<User> query = getEntityManager().createNamedQuery("User.findByToken", User.class);
         query.setParameter("authToken", authToken);
         User dbUser = null;

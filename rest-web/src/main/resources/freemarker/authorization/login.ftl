@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Identity Manager</title>
+  <title>Login</title>
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
 
@@ -90,19 +90,13 @@
       border-top-right-radius: 0;
     }
   </style>
-
-  <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.14/angular.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.14/angular-resource.min.js"></script>
-  <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-
 </head>
 <body>
 
   <div class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container">
       <div class="navbar-header">
-        <a class="navbar-brand" href="/">Identity Manager v0.1</a>
+        <a class="navbar-brand" href="/rest">Identity Manager v0.1</a>
       </div>
     </div>
   </div>
@@ -132,10 +126,16 @@
     </div>
   </div>
 
+  <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.14/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.14/angular-resource.min.js"></script>
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
   <script>
     'use strict';
 
-    var sessionResource = '/authorization/login';
+    var sessionResource = '/rest/authorization/login';
+    var token = '${oauthToken}';
 
     var app = angular.module('restLoginApp', ['ngResource']);
     app.factory('Session', ['$resource',
@@ -144,19 +144,19 @@
       }]
     );
 
-    app.controller('LoginController', ['$scope', function($scope) {
+    app.controller('LoginController', ['$scope', '$window', 'Session', function($scope, $window, Session) {
       $scope.user = {};
       $scope.login = function(user) {
         $scope.user = angular.copy(user);
-        console.log('Logging in ' + user.email);
+        console.log('Token: ' + token);
         Session.save(
-          {}, $scope.user,
+          {oauth_token: token}, 
+          $scope.user,
           function(success) {
-            // redirect to authorization page
-            console.log('Login successful');
+            $window.location.href = '/rest/authorization?oauth_token=' + token + '&session_token=' + success.sessionToken;
           },
           function(error) {
-            console.log('Error ' + error.data);
+            $window.alert('Error: ' + error.data);
           }
         );
       };

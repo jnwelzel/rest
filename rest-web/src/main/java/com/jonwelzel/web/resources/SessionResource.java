@@ -2,7 +2,7 @@ package com.jonwelzel.web.resources;
 
 import javax.ws.rs.core.Response;
 
-import com.jonwelzel.persistence.entities.User;
+import com.jonwelzel.commons.entities.User;
 
 public interface SessionResource {
 

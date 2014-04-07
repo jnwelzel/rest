@@ -1,4 +1,4 @@
-package com.jonwelzel.persistence.entities;
+package com.jonwelzel.commons.entities;
 
 import java.util.List;
 

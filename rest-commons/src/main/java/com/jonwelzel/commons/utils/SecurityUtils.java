@@ -1,4 +1,4 @@
-package com.jonwelzel.util;
+package com.jonwelzel.commons.utils;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;

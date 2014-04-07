@@ -1,9 +1,9 @@
-package com.jonwelzel.persistence.dao.generic;
+package com.jonwelzel.commons.dao;
 
 import java.io.Serializable;
 import java.util.List;
 
-import com.jonwelzel.persistence.entities.AbstractEntity;
+import com.jonwelzel.commons.entities.AbstractEntity;
 
 /**
  * DAO interface that defines the basic CRUD operations.

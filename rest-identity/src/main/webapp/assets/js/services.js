@@ -34,7 +34,7 @@ angular.module('ngIdentity.services', ['ngResource'])
       request: function (config) {
         config.headers = config.headers || {};
         if (SessionService.getToken()) {
-          config.headers.Authorization = SessionService.getToken();
+          config.headers['Identity-Session'] = SessionService.getToken();
         }
         return config;
       },

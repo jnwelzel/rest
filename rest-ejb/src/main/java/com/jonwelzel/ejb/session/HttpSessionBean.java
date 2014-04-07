@@ -9,10 +9,10 @@ import org.slf4j.Logger;
 
 import redis.clients.jedis.Jedis;
 
+import com.jonwelzel.commons.entities.Token;
+import com.jonwelzel.commons.entities.User;
 import com.jonwelzel.ejb.RedisFactory;
 import com.jonwelzel.ejb.annotations.Log;
-import com.jonwelzel.persistence.entities.AuthToken;
-import com.jonwelzel.persistence.entities.User;
 
 /**
  * Stateless session bean exposing HTTP session-related operations. The session information is all stored in Redis.
@@ -35,7 +35,7 @@ public class HttpSessionBean {
     private RedisFactory jedisFactory;
 
     /**
-     * Find the {@link User}'s {@link AuthToken} ID value using the session key associated to it.
+     * Find the {@link User}'s {@link Token} ID value using the session key associated to it.
      * 
      * @param sessionKey
      *            The session token stored in Redis that was generated when the user logged in.

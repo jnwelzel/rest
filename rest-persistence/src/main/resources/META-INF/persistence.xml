@@ -10,7 +10,10 @@
 	      	 <property name="eclipselink.logging.level" value="INFO" />
 	      	 <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/> 
 	   	</properties> 
-	   	
+	   	<class>com.jonwelzel.commons.entities.User</class>
+	   	<class>com.jonwelzel.commons.entities.Consumer</class>
+	   	<class>com.jonwelzel.commons.entities.Company</class>
+	   	<class>com.jonwelzel.commons.entities.Token</class>
 	</persistence-unit>
 
 </persistence>

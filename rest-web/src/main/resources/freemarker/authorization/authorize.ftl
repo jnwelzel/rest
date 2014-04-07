@@ -4,15 +4,8 @@
   <title>Allow Account Access</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Identity Manager</title>
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
-
-  <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.14/angular.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.14/angular-resource.min.js"></script>
-  <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-
   <style type="text/css">
     html {
       position: relative;
@@ -51,12 +44,12 @@
   <div class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container">
       <div class="navbar-header">
-        <a class="navbar-brand" href="/">Identity Manager v0.1</a>
+        <a class="navbar-brand" href="/rest">Identity Manager v0.1</a>
       </div>
       <div class="navbar-collapse collapse">
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="#profile">${user.firstName user.lastName}</a></li>
-          <li ng-controller="LogoutController"><a href="#logout" ng-click="logout()"><i class="fa fa-sign-out"></i> Log Out</a></li>
+          <li><a href="#profile">${user.firstName} ${user.lastName}</a></li>
+          <li ng-controller="LogoutController"><a href="/rest/authorization/#/logout" ng-click="logout()"><i class="fa fa-sign-out"></i> Log Out</a></li>
           <li><a href="https://github.com/jnwelzel/rest" target="new" title="Source code on Github"><i class="fa fa-github"></i></a></li>
         </ul>
       </div>
@@ -82,6 +75,36 @@
       </p>
     </div>
   </div>
+
+  <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.14/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.14/angular-resource.min.js"></script>
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+  <script>
+    'use strict';
+
+    var sessionResource = '/rest/session';
+    var token = '${oauthToken}';
+    var session = '${sessionToken}';
+
+    var app = angular.module('restLoginApp', ['ngResource']);
+    app.factory('Session', ['$resource',
+      function($resource) {
+        return $resource(sessionResource);
+      }]
+    );
+
+    app.controller('LogoutController', ['$scope', '$http', '$window', 'Session', function($scope, $http, $window, Session) {
+      $scope.user = {};
+      $scope.logout = function() {
+        var config = {headers: {'Identity-Session':session}};
+        console.log('Signing out: ' + session);
+        http.delete(sessionResource, config).success($window.location.href = '/rest').error($window.alert('Error!'));
+      };
+    }]);
+
+  </script>
 
 </body>
 </html>

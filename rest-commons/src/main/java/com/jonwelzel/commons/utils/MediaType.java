@@ -1,4 +1,4 @@
-package com.jonwelzel.util;
+package com.jonwelzel.commons.utils;
 
 /**
  * Media types used by the application to serve content.

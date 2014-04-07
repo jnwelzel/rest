@@ -30,12 +30,6 @@
 		</dependency>
 		<dependency>
 			<groupId>com.jonwelzel</groupId>
-			<artifactId>rest-persistence</artifactId>
-			<type>jar</type>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.jonwelzel</groupId>
 			<artifactId>rest-commons</artifactId>
 		</dependency>
 		<dependency>

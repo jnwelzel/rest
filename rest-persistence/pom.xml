@@ -56,13 +56,5 @@
 			<artifactId>postgresql</artifactId>
 			<version>9.1-901.jdbc4</version>
 		</dependency>
-		
-		<!-- JACKSON -->
-		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-core-asl</artifactId>
-			<version>1.9.11</version>
-			<scope>provided</scope>
-		</dependency>
 	</dependencies>
 </project>

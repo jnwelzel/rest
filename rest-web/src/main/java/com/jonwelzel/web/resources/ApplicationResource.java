@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jonwelzel.web.oauth.OAuth1ServerFilter;
+import com.jonwelzel.web.oauth.SessionServerFilter;
 
 @ApplicationPath("/")
 public class ApplicationResource extends ResourceConfig {
@@ -27,11 +28,12 @@ public class ApplicationResource extends ResourceConfig {
         register(UserResource.class);
         register(SessionResourceImpl.class);
         register(Oauth1AuthorizationResource.class);
-        register(OAuth1TokenResource.class);
+        register(RequestTokenResource.class);
         register(OAuth1ConsumerResource.class);
 
         // Sec + Auth
         register(OAuth1ServerFilter.class);
+        register(SessionServerFilter.class);
         register(RolesAllowedDynamicFeature.class); // Important for auth in JAX-RS using annotations
 
         // Others
