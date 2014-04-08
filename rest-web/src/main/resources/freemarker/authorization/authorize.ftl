@@ -85,8 +85,10 @@
     'use strict';
 
     var sessionResource = '/rest/session';
+    var authorizationResource = '/rest/authorization';
     var token = '${oauthToken}';
     var session = '${sessionToken}';
+    var config = {headers: {'Identity-Session':session}}; // used for $http requests
 
     var app = angular.module('restLoginApp', ['ngResource']);
     app.factory('Session', ['$resource',
@@ -97,10 +99,19 @@
 
     app.controller('LogoutController', ['$scope', '$http', '$window', 'Session', function($scope, $http, $window, Session) {
       $scope.user = {};
+
       $scope.logout = function() {
-        var config = {headers: {'Identity-Session':session}};
         console.log('Signing out: ' + session);
-        http.delete(sessionResource, config).success($window.location.href = '/rest').error($window.alert('Error!'));
+        $http.delete(sessionResource, config).success(function(success) {$window.location.href = '/rest';}).error(function(error) {$window.alert('Error! ' + error.data);});
+      };
+
+      $scope.authorize = function() {
+        console.log('Authorizing client application');
+        $http.post(authorizationResource, {'oauthToken':token,'sessionToken':session}, config);
+      };
+
+      $scope.deny = function() {
+        // TODO
       };
     }]);
 
