@@ -11,7 +11,6 @@ import javax.inject.Inject;
 
 import org.slf4j.Logger;
 
-import com.jonwelzel.commons.entities.Token;
 import com.jonwelzel.commons.entities.User;
 import com.jonwelzel.commons.utils.SecurityUtils;
 import com.jonwelzel.ejb.annotations.Log;
@@ -84,7 +83,7 @@ public class UserBean {
      *            The token that's automatically generated for this user.
      * @return The user or null.
      */
-    public User findByToken(Token authToken) {
+    public User findByToken(String authToken) {
         return userDao.findByToken(authToken);
     }
 

@@ -39,7 +39,7 @@
     }
   </style>
 </head>
-<body>
+<body ng-controller="PageController">
 
   <div class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container">
@@ -49,7 +49,7 @@
       <div class="navbar-collapse collapse">
         <ul class="nav navbar-nav navbar-right">
           <li><a href="#profile">${user.firstName} ${user.lastName}</a></li>
-          <li ng-controller="LogoutController"><a href="/rest/authorization/#/logout" ng-click="logout()"><i class="fa fa-sign-out"></i> Log Out</a></li>
+          <li><a href="/rest/authorization/#/logout" ng-click="logout()"><i class="fa fa-sign-out"></i> Log Out</a></li>
           <li><a href="https://github.com/jnwelzel/rest" target="new" title="Source code on Github"><i class="fa fa-github"></i></a></li>
         </ul>
       </div>
@@ -57,23 +57,27 @@
   </div>
 
 	<div class="container">
-    <h1>Authorize ${consumerApplicationName} to use your account?</h1>
-    <h1><small>${consumerApplicationDescription}</small></h1>
-    <hr/>
+    <form action="/rest/authorization" method="post" class="form-horizontal" role="form">
+      <input type="hidden" name="oauthToken" value="${oauthToken}">
+      <input type="hidden" name="sessionToken" value="${sessionToken}">
+      <h1>Authorize ${consumerApplicationName} to use your account?</h1>
+      <h1><small>${consumerApplicationDescription}</small></h1>
+      <hr/>
 
-    <div class="row">
-      This application <strong class="text-success">will be able to</strong>:
-      <ul>
-        <li>Access your basic personal information (name and email).</li>
-      </ul>
-    </div>
+      <div class="row">
+        This application <strong class="text-success">will be able to</strong>:
+        <ul>
+          <li>Access your basic personal information (name and email).</li>
+        </ul>
+      </div>
 
-    <div class="row">
-      <p>
-        <button type="button" class="btn btn-primary btn-lg">Authorize app</button>
-        <button type="button" class="btn btn-default btn-lg">No, thanks</button>
-      </p>
-    </div>
+      <div class="row">
+        <p>
+          <button type="submit" class="btn btn-primary btn-lg">Authorize app</button>
+          <a type="button" class="btn btn-default btn-lg" ng-click="deny()">No, thanks</a>
+        </p>
+      </div>
+    </form>
   </div>
 
   <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
@@ -88,26 +92,20 @@
     var authorizationResource = '/rest/authorization';
     var token = '${oauthToken}';
     var session = '${sessionToken}';
-    var config = {headers: {'Identity-Session':session}}; // used for $http requests
 
-    var app = angular.module('restLoginApp', ['ngResource']);
+    var app = angular.module('restOauthApp', ['ngResource']);
     app.factory('Session', ['$resource',
       function($resource) {
         return $resource(sessionResource);
       }]
     );
 
-    app.controller('LogoutController', ['$scope', '$http', '$window', 'Session', function($scope, $http, $window, Session) {
+    app.controller('PageController', ['$scope', '$http', '$window', 'Session', function($scope, $http, $window, Session) {
       $scope.user = {};
 
       $scope.logout = function() {
         console.log('Signing out: ' + session);
-        $http.delete(sessionResource, config).success(function(success) {$window.location.href = '/rest';}).error(function(error) {$window.alert('Error! ' + error.data);});
-      };
-
-      $scope.authorize = function() {
-        console.log('Authorizing client application');
-        $http.post(authorizationResource, {'oauthToken':token,'sessionToken':session}, config);
+        $http.delete(sessionResource, {headers: {'Identity-Session':session}}).success(function(success) {$window.location.href = '/rest';}).error(function(error) {$window.alert('Error! ' + error.data);});
       };
 
       $scope.deny = function() {

@@ -8,8 +8,9 @@ import javax.ws.rs.ext.Provider;
 
 import com.jonwelzel.commons.entities.OAuth1Consumer;
 import com.jonwelzel.commons.entities.OAuth1Token;
+import com.jonwelzel.commons.entities.Token;
 import com.jonwelzel.ejb.consumer.ConsumerBean;
-import com.jonwelzel.ejb.oauth.AuthTokenBean;
+import com.jonwelzel.ejb.oauth.TokenBean;
 
 /**
  * Glue between application-specific domain objects and OAuth-specific objects. This is the point where the application
@@ -22,7 +23,7 @@ import com.jonwelzel.ejb.oauth.AuthTokenBean;
 public class OAuth1ProviderImpl implements OAuth1Provider {
 
     @Inject
-    private AuthTokenBean authTokenBean;
+    private TokenBean tokenBean;
 
     @Inject
     private ConsumerBean consumerBean;
@@ -34,23 +35,23 @@ public class OAuth1ProviderImpl implements OAuth1Provider {
 
     @Override
     public OAuth1Token newRequestToken(String consumerKey, String callbackUrl, Map<String, List<String>> attributes) {
-        return authTokenBean.newRequestToken(consumerKey, callbackUrl);
+        return tokenBean.newRequestToken(consumerKey, callbackUrl);
     }
 
     @Override
     public OAuth1Token getRequestToken(String token) {
-        return authTokenBean.find(token);
+        return tokenBean.findByToken(token);
     }
 
     @Override
     public OAuth1Token newAccessToken(OAuth1Token requestToken, String verifier) {
-        return authTokenBean.newAccessToken(requestToken, verifier);
+        Token rt = (Token) requestToken;
+        return tokenBean.newAccessToken(rt, verifier);
     }
 
     @Override
     public OAuth1Token getAccessToken(String token) {
-        // TODO Auto-generated method stub
-        return null;
+        return tokenBean.findByToken(token);
     }
 
 }

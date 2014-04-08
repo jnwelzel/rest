@@ -31,7 +31,7 @@ import com.jonwelzel.commons.enumerations.RoleType;
 @Entity
 @NamedQueries(value = {
         @NamedQuery(name = "Consumer.findByKey", query = "SELECT c from Consumer c where c.key = :key"),
-        @NamedQuery(name = "Consumer.findByToken", query = "SELECT c FROM Consumer c JOIN c.authTokens a WHERE a.id = :authToken") })
+        @NamedQuery(name = "Consumer.findByToken", query = "SELECT c FROM Consumer c JOIN c.tokens t WHERE t.token = :authToken") })
 public class Consumer extends AbstractEntity<Long> implements Principal, OAuth1Consumer {
 
     private static final long serialVersionUID = 1L;
@@ -58,6 +58,9 @@ public class Consumer extends AbstractEntity<Long> implements Principal, OAuth1C
     private String applicationUrl;
 
     @Column(nullable = false, unique = true)
+    private String applicationCallbackUrl;
+
+    @Column(nullable = false, unique = true)
     private String applicationName;
 
     @Column(nullable = false, length = 2000)
@@ -65,7 +68,7 @@ public class Consumer extends AbstractEntity<Long> implements Principal, OAuth1C
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "consumer")
     @JsonManagedReference(value = "consumer")
-    private List<Token> authTokens = new ArrayList<>();
+    private List<Token> tokens = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     @OneToMany(orphanRemoval = true)
@@ -134,6 +137,14 @@ public class Consumer extends AbstractEntity<Long> implements Principal, OAuth1C
         this.applicationUrl = applicationUrl;
     }
 
+    public String getApplicationCallbackUrl() {
+        return applicationCallbackUrl;
+    }
+
+    public void setApplicationCallbackUrl(String applicationCallbackUrl) {
+        this.applicationCallbackUrl = applicationCallbackUrl;
+    }
+
     public String getApplicationName() {
         return applicationName;
     }
@@ -158,12 +169,12 @@ public class Consumer extends AbstractEntity<Long> implements Principal, OAuth1C
         this.roles = roles;
     }
 
-    public List<Token> getAuthTokens() {
-        return authTokens;
+    public List<Token> getTokens() {
+        return tokens;
     }
 
-    public void setAuthTokens(List<Token> authTokens) {
-        this.authTokens = authTokens;
+    public void setTokens(List<Token> tokens) {
+        this.tokens = tokens;
     }
 
     @Override

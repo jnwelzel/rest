@@ -32,8 +32,9 @@ import com.jonwelzel.commons.enumerations.RoleType;
  */
 @Entity
 @Table(name = "APP_USER")
-@NamedQueries(value = { @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = :email"),
-        @NamedQuery(name = "User.findByToken", query = "SELECT u FROM User u JOIN u.authTokens a WHERE a = :authToken") })
+@NamedQueries(value = {
+        @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = :email"),
+        @NamedQuery(name = "User.findByToken", query = "SELECT u FROM User u JOIN u.tokens t WHERE t.token = :authToken") })
 public class User extends AbstractEntity<Long> implements Principal {
 
     private static final long serialVersionUID = 1L;
@@ -65,9 +66,9 @@ public class User extends AbstractEntity<Long> implements Principal {
     @ManyToMany(mappedBy = "users")
     private List<Company> companies;
 
-    @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.REMOVE }, orphanRemoval = true, mappedBy = "user")
+    @OneToMany(cascade = { CascadeType.REMOVE }, orphanRemoval = true, mappedBy = "user")
     @JsonManagedReference(value = "user")
-    private List<Token> authTokens = new ArrayList<>();
+    private List<Token> tokens = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     @OneToMany(orphanRemoval = true)
@@ -131,12 +132,12 @@ public class User extends AbstractEntity<Long> implements Principal {
         this.companies = companies;
     }
 
-    public List<Token> getAuthTokens() {
-        return authTokens;
+    public List<Token> getTokens() {
+        return tokens;
     }
 
-    public void setAuthTokens(List<Token> authTokens) {
-        this.authTokens = authTokens;
+    public void setTokens(List<Token> tokens) {
+        this.tokens = tokens;
     }
 
     public String getPasswordHash() {

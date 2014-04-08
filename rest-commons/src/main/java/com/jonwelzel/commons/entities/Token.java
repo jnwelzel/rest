@@ -8,8 +8,13 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.codehaus.jackson.annotate.JsonBackReference;
@@ -24,15 +29,23 @@ import com.jonwelzel.commons.enumerations.RoleType;
  */
 @Entity
 @Table(name = "TOKEN")
-public class Token extends AbstractEntity<String> implements OAuth1Token {
+@NamedQueries(value = {
+        @NamedQuery(name = "Token.findByToken", query = "SELECT t FROM Token t WHERE t.token = :token"),
+        @NamedQuery(name = "Token.findByVerifier", query = "SELECT t FROM Token t WHERE t.verifier = :verifier") })
+public class Token extends AbstractEntity<Long> implements OAuth1Token {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    @Column(name = "ID", length = 40)
-    private String id;
+    @SequenceGenerator(name = "token_seq", allocationSize = 1, initialValue = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "token_seq")
+    @Column(name = "ID")
+    private Long id;
 
-    @ManyToOne(optional = true, fetch = FetchType.LAZY)
+    @Column(length = 40, nullable = false)
+    private String token;
+
+    @ManyToOne(optional = true, fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JsonBackReference(value = "user")
     private User user;
 
@@ -43,18 +56,26 @@ public class Token extends AbstractEntity<String> implements OAuth1Token {
     @Column(length = 40)
     private String secret;
 
+    @Column(length = 40)
+    private String verifier;
+
     @Basic(optional = true)
     private String callbackUrl;
+
+    public Token(String verifier, String callbackUrl) {
+        this.verifier = verifier;
+        this.callbackUrl = callbackUrl;
+    }
 
     public Token() {
     }
 
     public Token(String id) {
-        this.id = id;
+        this.token = id;
     }
 
     public Token(String id, String secret, Consumer consumer, String callbackUrl) {
-        this.id = id;
+        this.token = id;
         this.secret = secret;
         this.consumer = consumer;
         this.callbackUrl = callbackUrl;
@@ -66,7 +87,7 @@ public class Token extends AbstractEntity<String> implements OAuth1Token {
      * @return string representing the token
      */
     @Override
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
@@ -98,9 +119,21 @@ public class Token extends AbstractEntity<String> implements OAuth1Token {
         return secret;
     }
 
+    public String getVerifier() {
+        return verifier;
+    }
+
+    public void setVerifier(String verifier) {
+        this.verifier = verifier;
+    }
+
     @Override
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     /**
@@ -134,7 +167,7 @@ public class Token extends AbstractEntity<String> implements OAuth1Token {
 
     @Override
     public String getToken() {
-        return id;
+        return token;
     }
 
     @Override
