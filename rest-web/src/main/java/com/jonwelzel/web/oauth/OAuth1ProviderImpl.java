@@ -1,14 +1,19 @@
 package com.jonwelzel.web.oauth;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.Provider;
 
 import com.jonwelzel.commons.entities.OAuth1Consumer;
 import com.jonwelzel.commons.entities.OAuth1Token;
 import com.jonwelzel.commons.entities.Token;
+import com.jonwelzel.commons.utils.SecurityUtils;
 import com.jonwelzel.ejb.consumer.ConsumerBean;
 import com.jonwelzel.ejb.oauth.TokenBean;
 
@@ -46,7 +51,19 @@ public class OAuth1ProviderImpl implements OAuth1Provider {
     @Override
     public OAuth1Token newAccessToken(OAuth1Token requestToken, String verifier) {
         Token rt = (Token) requestToken;
-        return tokenBean.newAccessToken(rt, verifier);
+        if (!rt.getVerifier().equals(verifier)) {
+            throw new WebApplicationException(Response.status(Status.BAD_REQUEST)
+                    .entity("The verifier does not match any token.").build());
+        }
+        // Take the request token, set new 'secret' and new 'token'
+        try {
+            rt.setSecret(SecurityUtils.generateSecureHex());
+            rt.setToken(SecurityUtils.generateSecureHex());
+        } catch (NoSuchAlgorithmException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return tokenBean.save(rt);
     }
 
     @Override

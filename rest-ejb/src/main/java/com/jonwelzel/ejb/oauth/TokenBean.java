@@ -64,11 +64,6 @@ public class TokenBean {
         return token;
     }
 
-    public Token newAccessToken(Token requestToken, String verifier) {
-        // TODO Take the request token, set new 'secret' and new 'token'
-        return tokenDao.save(requestToken);
-    }
-
     public Token save(Token token) {
         return tokenDao.save(token);
     }
