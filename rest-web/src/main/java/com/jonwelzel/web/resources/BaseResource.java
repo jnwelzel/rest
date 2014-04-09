@@ -18,7 +18,7 @@ import com.jonwelzel.commons.entities.AbstractEntity;
  * @param <T>
  *            Type of the resource.
  */
-public interface Resource<PK extends Serializable, T extends AbstractEntity<PK>> {
+public interface BaseResource<PK extends Serializable, T extends AbstractEntity<PK>> {
 
     /**
      * Retrieve all records of the {@linkplain T} resource type.

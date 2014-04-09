@@ -37,7 +37,7 @@ import com.jonwelzel.ejb.user.UserBean;
 @Produces(MediaType.APPLICATION_JSON)
 @DeclareRoles(value = { "USER", "ADMIN" })
 @RolesAllowed(value = { "USER", "ADMIN" })
-public class UserResource implements Resource<Long, User> {
+public class UserResource implements BaseResource<Long, User> {
 
     @Inject
     @Log

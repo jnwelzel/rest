@@ -27,9 +27,10 @@ public class ApplicationResource extends ResourceConfig {
         // Resources
         register(UserResource.class);
         register(SessionResourceImpl.class);
-        register(Oauth1AuthorizationResource.class);
+        register(AuthorizationResource.class);
         register(RequestTokenResource.class);
-        register(OAuth1ConsumerResource.class);
+        register(AccessTokenResource.class);
+        register(ConsumerResource.class);
 
         // Sec + Auth
         register(OAuth1ServerFilter.class);

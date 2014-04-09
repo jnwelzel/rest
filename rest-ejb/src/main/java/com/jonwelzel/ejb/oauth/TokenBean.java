@@ -1,5 +1,6 @@
 package com.jonwelzel.ejb.oauth;
 
+import java.net.URI;
 import java.security.NoSuchAlgorithmException;
 
 import javax.ejb.EJB;
@@ -10,10 +11,13 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 
 import com.jonwelzel.commons.entities.Consumer;
+import com.jonwelzel.commons.entities.OAuth1Token;
 import com.jonwelzel.commons.entities.Token;
+import com.jonwelzel.commons.entities.User;
 import com.jonwelzel.commons.utils.SecurityUtils;
 import com.jonwelzel.ejb.annotations.Log;
 import com.jonwelzel.ejb.consumer.ConsumerDao;
+import com.jonwelzel.ejb.exceptions.checked.ApplicationException;
 
 @Stateless(mappedName = "AuthTokenBean")
 @LocalBean
@@ -64,7 +68,26 @@ public class TokenBean {
         return token;
     }
 
-    public Token save(Token token) {
-        return tokenDao.save(token);
+    public URI authorize(Token authorized, User user) throws NoSuchAlgorithmException {
+        // Add verfier and User to token, save it
+        String verifier = SecurityUtils.generateSecureHex();
+        authorized.setVerifier(verifier);
+        authorized.setUser(user);
+        authorized = tokenDao.save(authorized);
+        URI callback = URI.create(authorized.getCallbackUrl() + "?oauth_token=" + authorized.getToken()
+                + "&oauth_verifier=" + verifier);
+        return callback;
+    }
+
+    public OAuth1Token newAccessToken(OAuth1Token requestToken, String verifier) throws ApplicationException,
+            NoSuchAlgorithmException {
+        Token rt = (Token) requestToken;
+        if (!rt.getVerifier().equals(verifier)) {
+            throw new ApplicationException("The verifier informed does not match any token.");
+        }
+        // Take the request token, set new 'secret' and new 'token'
+        rt.setSecret(SecurityUtils.generateSecureHex());
+        rt.setToken(SecurityUtils.generateSecureHex());
+        return tokenDao.save(rt);
     }
 }

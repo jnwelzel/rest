@@ -2,7 +2,6 @@ package com.jonwelzel.web.resources;
 
 import static com.jonwelzel.web.oauth.OAuth1Configuration.AUTHORIZATION_ROOT_URL;
 
-import java.net.URI;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,7 +36,7 @@ import com.jonwelzel.ejb.user.UserBean;
 import com.jonwelzel.web.oauth.OAuth1Exception;
 
 @Path(AUTHORIZATION_ROOT_URL)
-public class Oauth1AuthorizationResource {
+public class AuthorizationResource {
 
     @Inject
     @Log
@@ -76,14 +75,7 @@ public class Oauth1AuthorizationResource {
         }
         User user = userBean.findUser(userId);
         try {
-            // Add verfier and User to token, save it
-            String verifier = SecurityUtils.generateSecureHex();
-            authorized.setVerifier(verifier);
-            authorized.setUser(user);
-            authorized = tokenBean.save(authorized);
-            URI callback = URI.create(authorized.getCallbackUrl() + "?oauth_token=" + oauthToken + "&oauth_verifier="
-                    + verifier);
-            return Response.seeOther(callback).build();
+            return Response.seeOther(tokenBean.authorize(authorized, user)).build();
         } catch (NoSuchAlgorithmException e) {
             log.error(null, e);
             throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR)

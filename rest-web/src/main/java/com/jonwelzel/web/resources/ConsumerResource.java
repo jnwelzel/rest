@@ -25,7 +25,7 @@ import com.jonwelzel.ejb.consumer.ConsumerBean;
 @Path("consumers")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class OAuth1ConsumerResource implements Resource<Long, Consumer> {
+public class ConsumerResource implements BaseResource<Long, Consumer> {
 
     @Inject
     private ConsumerBean consumerBean;

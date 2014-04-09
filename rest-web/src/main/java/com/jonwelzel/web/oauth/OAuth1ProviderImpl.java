@@ -10,11 +10,13 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.Provider;
 
+import org.slf4j.Logger;
+
 import com.jonwelzel.commons.entities.OAuth1Consumer;
 import com.jonwelzel.commons.entities.OAuth1Token;
-import com.jonwelzel.commons.entities.Token;
-import com.jonwelzel.commons.utils.SecurityUtils;
+import com.jonwelzel.ejb.annotations.Log;
 import com.jonwelzel.ejb.consumer.ConsumerBean;
+import com.jonwelzel.ejb.exceptions.checked.ApplicationException;
 import com.jonwelzel.ejb.oauth.TokenBean;
 
 /**
@@ -33,6 +35,10 @@ public class OAuth1ProviderImpl implements OAuth1Provider {
     @Inject
     private ConsumerBean consumerBean;
 
+    @Inject
+    @Log
+    private Logger log;
+
     @Override
     public OAuth1Consumer getConsumer(String consumerKey) {
         return consumerBean.findByKey(consumerKey);
@@ -50,20 +56,16 @@ public class OAuth1ProviderImpl implements OAuth1Provider {
 
     @Override
     public OAuth1Token newAccessToken(OAuth1Token requestToken, String verifier) {
-        Token rt = (Token) requestToken;
-        if (!rt.getVerifier().equals(verifier)) {
-            throw new WebApplicationException(Response.status(Status.BAD_REQUEST)
-                    .entity("The verifier does not match any token.").build());
-        }
-        // Take the request token, set new 'secret' and new 'token'
         try {
-            rt.setSecret(SecurityUtils.generateSecureHex());
-            rt.setToken(SecurityUtils.generateSecureHex());
+            return tokenBean.newAccessToken(requestToken, verifier);
         } catch (NoSuchAlgorithmException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error(null, e);
+            throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR).entity(e.getMessage())
+                    .build());
+        } catch (ApplicationException e) {
+            log.error(null, e);
+            throw new WebApplicationException(Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build());
         }
-        return tokenBean.save(rt);
     }
 
     @Override

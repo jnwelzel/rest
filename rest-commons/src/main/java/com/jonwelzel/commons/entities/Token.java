@@ -62,20 +62,20 @@ public class Token extends AbstractEntity<Long> implements OAuth1Token {
     @Basic(optional = true)
     private String callbackUrl;
 
-    public Token(String verifier, String callbackUrl) {
-        this.verifier = verifier;
-        this.callbackUrl = callbackUrl;
+    public Token(String token, String secret) {
+        this.token = token;
+        this.secret = secret;
     }
 
     public Token() {
     }
 
-    public Token(String id) {
-        this.token = id;
+    public Token(String token) {
+        this.token = token;
     }
 
-    public Token(String id, String secret, Consumer consumer, String callbackUrl) {
-        this.token = id;
+    public Token(String token, String secret, Consumer consumer, String callbackUrl) {
+        this.token = token;
         this.secret = secret;
         this.consumer = consumer;
         this.callbackUrl = callbackUrl;

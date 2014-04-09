@@ -172,6 +172,6 @@ public class User extends AbstractEntity<Long> implements Principal {
 
     @Override
     public String getName() {
-        return firstName + " " + lastName + " (" + email + ")";
+        return firstName + " " + lastName;
     }
 }
