@@ -18,6 +18,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.codehaus.jackson.annotate.JsonBackReference;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 import com.jonwelzel.commons.enumerations.RoleType;
 
@@ -176,6 +177,7 @@ public class Token extends AbstractEntity<Long> implements OAuth1Token {
     }
 
     @Override
+    @JsonIgnore
     public Principal getPrincipal() {
         return user == null ? consumer : user;
     }
