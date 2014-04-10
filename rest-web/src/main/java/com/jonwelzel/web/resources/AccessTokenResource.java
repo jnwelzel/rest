@@ -15,13 +15,12 @@ import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
 
 import com.jonwelzel.commons.entities.OAuth1Consumer;
-import com.jonwelzel.commons.entities.OAuth1Token;
 import com.jonwelzel.commons.entities.Token;
 import com.jonwelzel.ejb.annotations.Log;
 import com.jonwelzel.web.oauth.OAuth1Configuration;
 import com.jonwelzel.web.oauth.OAuth1Exception;
 import com.jonwelzel.web.oauth.OAuth1Parameters;
-import com.jonwelzel.web.oauth.OAuth1Provider;
+import com.jonwelzel.web.oauth.OAuth1ProviderImpl;
 import com.jonwelzel.web.oauth.OAuth1Secrets;
 import com.jonwelzel.web.oauth.OAuth1Signature;
 import com.jonwelzel.web.oauth.OAuth1SignatureException;
@@ -37,7 +36,7 @@ import com.jonwelzel.web.oauth.OAuthServerRequest;
 @Path(OAuth1Configuration.ACCESS_TOKEN_URL)
 public class AccessTokenResource {
     @Inject
-    private OAuth1Provider provider;
+    private OAuth1ProviderImpl provider;
 
     @Inject
     private OAuth1Signature oAuth1Signature;
@@ -69,7 +68,7 @@ public class AccessTokenResource {
             throw new OAuth1Exception(Response.Status.BAD_REQUEST, null);
         }
 
-        OAuth1Token rt = provider.getRequestToken(params.getToken());
+        Token rt = provider.getRequestToken(params.getToken());
         if (rt == null) {
             // token invalid
             throw new OAuth1Exception(Response.Status.BAD_REQUEST, null);
@@ -91,11 +90,12 @@ public class AccessTokenResource {
 
         if (!sigIsOk) {
             // signature invalid
+            log.error("Signature is invalid.");
             throw new OAuth1Exception(Response.Status.BAD_REQUEST, null);
         }
 
         // We're good to go.
-        OAuth1Token at = provider.newAccessToken(rt, params.getVerifier());
+        Token at = provider.newAccessToken(rt, params.getVerifier());
 
         if (at == null) {
             throw new OAuth1Exception(Response.Status.BAD_REQUEST, null);

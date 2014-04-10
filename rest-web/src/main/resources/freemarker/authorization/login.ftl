@@ -96,7 +96,7 @@
   <div class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container">
       <div class="navbar-header">
-        <a class="navbar-brand" href="/rest">Identity Manager v0.1</a>
+        <a class="navbar-brand" href="/identity">Identity Manager v0.1</a>
       </div>
     </div>
   </div>
@@ -106,7 +106,7 @@
 
     <div class="alert alert-info alert-dismissable">
       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-      <strong>Attention!</strong> "${consumerApplicationName}" (<a href="${consumerDomain}">${consumerDomain}</a>) would like to connect to your account.
+      <strong>Attention!</strong> The application <strong>${consumerApplicationName}</strong> (<a href="${consumerDomain}">${consumerDomain}</a>) would like to connect to your account.
     </div>
 
     <form class="form-signin" accept-charset="UTF-8" role="form" ng-controller="LoginController">

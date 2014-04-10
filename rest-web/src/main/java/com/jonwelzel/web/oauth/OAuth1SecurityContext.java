@@ -69,4 +69,8 @@ public class OAuth1SecurityContext implements SecurityContext {
     public OAuth1Consumer getConsumer() {
         return consumer;
     }
+
+    public String getToken() {
+        return token != null ? token.getToken() : null;
+    }
 }

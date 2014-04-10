@@ -65,7 +65,6 @@ public class OAuth1ServerFilter implements ContainerRequestFilter {
 
     @Override
     public void filter(ContainerRequestContext request) throws IOException {
-        log.info("Checking for OAuth authentication parameters");
         // do not filter requests that do not use OAuth authentication
         final String authHeader = request.getHeaderString(OAuth1Parameters.AUTHORIZATION_HEADER);
         if (authHeader == null || !authHeader.toUpperCase().startsWith(OAuth1Parameters.SCHEME.toUpperCase())) {
@@ -145,7 +144,8 @@ public class OAuth1ServerFilter implements ContainerRequestFilter {
         if (!nonces.verify(nonceKey, timestamp, nonce)) {
             throw newUnauthorizedException();
         }
-
+        log.info("[" + request.getRequest().getMethod() + "] \"" + request.getUriInfo().getPath() + "\" (User="
+                + sc.getUserPrincipal() + ", token=" + sc.getToken() + ")");
         return sc;
     }
 

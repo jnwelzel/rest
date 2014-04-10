@@ -16,11 +16,11 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
 import com.jonwelzel.commons.entities.OAuth1Consumer;
-import com.jonwelzel.commons.entities.OAuth1Token;
+import com.jonwelzel.commons.entities.Token;
 import com.jonwelzel.web.oauth.OAuth1Configuration;
 import com.jonwelzel.web.oauth.OAuth1Exception;
 import com.jonwelzel.web.oauth.OAuth1Parameters;
-import com.jonwelzel.web.oauth.OAuth1Provider;
+import com.jonwelzel.web.oauth.OAuth1ProviderImpl;
 import com.jonwelzel.web.oauth.OAuth1Secrets;
 import com.jonwelzel.web.oauth.OAuth1Signature;
 import com.jonwelzel.web.oauth.OAuth1SignatureException;
@@ -29,7 +29,7 @@ import com.jonwelzel.web.oauth.OAuthServerRequest;
 @Path(OAuth1Configuration.REQUEST_TOKEN_URL)
 public class RequestTokenResource {
     @Inject
-    private OAuth1Provider provider;
+    private OAuth1ProviderImpl provider;
 
     @Inject
     private OAuth1Signature oAuth1Signature;
@@ -79,7 +79,7 @@ public class RequestTokenResource {
             parameters.put(n, request.getParameterValues(n));
         }
 
-        OAuth1Token rt = provider.newRequestToken(consKey, params.getCallback(), parameters);
+        Token rt = provider.newRequestToken(consKey, params.getCallback(), parameters);
 
         Form resp = new Form();
         resp.param(OAuth1Parameters.TOKEN, rt.getToken());

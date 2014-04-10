@@ -4,7 +4,6 @@ import java.security.Principal;
 import java.util.Map;
 
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -32,7 +31,8 @@ import com.jonwelzel.commons.enumerations.RoleType;
 @Table(name = "TOKEN")
 @NamedQueries(value = {
         @NamedQuery(name = "Token.findByToken", query = "SELECT t FROM Token t WHERE t.token = :token"),
-        @NamedQuery(name = "Token.findByVerifier", query = "SELECT t FROM Token t WHERE t.verifier = :verifier") })
+        @NamedQuery(name = "Token.findByVerifier", query = "SELECT t FROM Token t WHERE t.verifier = :verifier"),
+        @NamedQuery(name = "Token.findByConsumerAndUser", query = "SELECT t FROM Token t WHERE t.consumer = :consumer AND t.user = :user") })
 public class Token extends AbstractEntity<Long> implements OAuth1Token {
 
     private static final long serialVersionUID = 1L;
@@ -46,11 +46,11 @@ public class Token extends AbstractEntity<Long> implements OAuth1Token {
     @Column(length = 40, nullable = false)
     private String token;
 
-    @ManyToOne(optional = true, fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JsonBackReference(value = "user")
     private User user;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JsonBackReference(value = "consumer")
     private Consumer consumer;
 

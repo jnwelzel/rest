@@ -2,11 +2,13 @@ package com.jonwelzel.web.resources;
 
 import static com.jonwelzel.web.oauth.OAuth1Configuration.AUTHORIZATION_ROOT_URL;
 
+import java.net.URI;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -16,6 +18,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -30,6 +33,7 @@ import com.jonwelzel.commons.entities.User;
 import com.jonwelzel.commons.utils.SecurityUtils;
 import com.jonwelzel.ejb.annotations.Log;
 import com.jonwelzel.ejb.consumer.ConsumerBean;
+import com.jonwelzel.ejb.exceptions.checked.ApplicationException;
 import com.jonwelzel.ejb.oauth.TokenBean;
 import com.jonwelzel.ejb.session.HttpSessionBean;
 import com.jonwelzel.ejb.user.UserBean;
@@ -85,29 +89,53 @@ public class AuthorizationResource {
 
     @GET
     public Viewable getHtml(@QueryParam("oauth_token") String oauthToken,
-            @QueryParam("session_token") String sessionToken) {
+            @QueryParam("session_token") String sessionToken, @Context HttpServletResponse response)
+            throws NoSuchAlgorithmException, ApplicationException {
         if (oauthToken == null || "".equals(oauthToken)) {
             throw new OAuth1Exception("\"oauth_token\" must be informed as a query parameter.");
         }
         Consumer consumer = consumerBean.findByToken(oauthToken);
         if (sessionToken == null || "".equals(sessionToken)) {
-            Map<String, String> model = new HashMap<>();
-            model.put("consumerApplicationName", consumer.getApplicationName());
-            model.put("consumerDomain", consumer.getApplicationUrl());
-            model.put("oauthToken", oauthToken);
-            return new Viewable("/authorization/login", model);
+            return new Viewable("/authorization/login", getLoginModel(consumer, oauthToken));
         } else {
-            Long userId = Long.valueOf(httpSessionBean.getUserId(sessionToken));
-            User dbUser = userBean.findUser(userId);
-            Map<String, Object> model = new HashMap<>();
-            model.put("consumerApplicationName", consumer.getApplicationName());
-            model.put("consumerDomain", consumer.getApplicationUrl());
-            model.put("consumerApplicationDescription", consumer.getApplicationDescription());
-            model.put("oauthToken", oauthToken);
-            model.put("sessionToken", sessionToken);
-            model.put("user", dbUser);
-            return new Viewable("/authorization/authorize", model);
+            final Long userId = Long.valueOf(httpSessionBean.getUserId(sessionToken));
+            final User dbUser = userBean.findUser(userId);
+            Token accessToken = tokenBean.findByConsumerAndUser(consumer, dbUser);
+            if (accessToken != null) {
+                // In this case the user has already granted permission to consumer
+                // Let's just go ahead and reuse this token
+                final URI uri = tokenBean.authorize(accessToken, dbUser);
+                response.addHeader(HttpHeaders.LOCATION, uri.toString());
+                return new Viewable("/authorization/redirect", getRedirectModel(uri));
+            }
+            return new Viewable("/authorization/authorize", getAuthorizeModel(consumer, oauthToken, sessionToken,
+                    dbUser));
         }
+    }
+
+    private Object getRedirectModel(URI callbackUrl) {
+        Map<String, String> model = new HashMap<>();
+        model.put("url", callbackUrl.toString());
+        return model;
+    }
+
+    private Object getLoginModel(Consumer consumer, String oauthToken) {
+        Map<String, String> model = new HashMap<>();
+        model.put("consumerApplicationName", consumer.getApplicationName());
+        model.put("consumerDomain", consumer.getApplicationUrl());
+        model.put("oauthToken", oauthToken);
+        return model;
+    }
+
+    private Object getAuthorizeModel(Consumer consumer, String oauthToken, String sessionToken, User dbUser) {
+        Map<String, Object> model = new HashMap<>();
+        model.put("consumerApplicationName", consumer.getApplicationName());
+        model.put("consumerDomain", consumer.getApplicationUrl());
+        model.put("consumerApplicationDescription", consumer.getApplicationDescription());
+        model.put("oauthToken", oauthToken);
+        model.put("sessionToken", sessionToken);
+        model.put("user", dbUser);
+        return model;
     }
 
     @Path("login")

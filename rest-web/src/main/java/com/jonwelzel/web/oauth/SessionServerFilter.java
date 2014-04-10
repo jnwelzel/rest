@@ -46,21 +46,24 @@ public class SessionServerFilter implements ContainerRequestFilter {
     public static final String IDENTITY_SESSION_HEADER = "Identity-Session";
 
     @Override
-    public void filter(ContainerRequestContext requestContext) throws IOException {
-        final String authHeader = requestContext.getHeaderString(IDENTITY_SESSION_HEADER);
+    public void filter(ContainerRequestContext request) throws IOException {
+        if (request.getSecurityContext().getUserPrincipal() != null) {
+            return;
+        }
+        final String authHeader = request.getHeaderString(IDENTITY_SESSION_HEADER);
         User user = null;
         if (authHeader != null) {
             final String userId = httpSessionBean.getUserId(authHeader);
             if (userId == null) {
                 // Ops, session expired buddy
-                requestContext.abortWith(Response.status(Status.UNAUTHORIZED).entity("Session expired!").build());
+                request.abortWith(Response.status(Status.UNAUTHORIZED).entity("Session expired!").build());
             } else {
                 user = userBean.findUser(Long.valueOf(userId));
             }
         }
-        log.info("[" + requestContext.getRequest().getMethod() + "] \"" + requestContext.getUriInfo().getPath()
-                + "\" (User=" + user + ", token=" + authHeader + ")");
-        requestContext.setSecurityContext(new SecurityContextImpl(user));
+        log.info("[" + request.getRequest().getMethod() + "] \"" + request.getUriInfo().getPath() + "\" (User=" + user
+                + ", token=" + authHeader + ")");
+        request.setSecurityContext(new SecurityContextImpl(user));
     }
 
 }

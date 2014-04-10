@@ -79,15 +79,23 @@ public class TokenBean {
         return callback;
     }
 
-    public OAuth1Token newAccessToken(OAuth1Token requestToken, String verifier) throws ApplicationException,
+    public Token newAccessToken(OAuth1Token requestToken, String verifier) throws ApplicationException,
             NoSuchAlgorithmException {
-        Token rt = (Token) requestToken;
-        if (!rt.getVerifier().equals(verifier)) {
+        Token accessToken = findByToken(requestToken.getToken());
+        if (!accessToken.getVerifier().equals(verifier)) {
             throw new ApplicationException("The verifier informed does not match any token.");
         }
-        // Take the request token, set new 'secret' and new 'token'
-        rt.setSecret(SecurityUtils.generateSecureHex());
-        rt.setToken(SecurityUtils.generateSecureHex());
-        return tokenDao.save(rt);
+        // Take the request token, set new 'secret' and new 'token' and u got yourself an access token
+        accessToken.setSecret(SecurityUtils.generateSecureHex());
+        accessToken.setToken(SecurityUtils.generateSecureHex());
+        return tokenDao.save(accessToken);
+    }
+
+    public Token findByConsumerAndUser(Consumer consumer, User user) {
+        return tokenDao.findByConsumerAndUser(consumer, user);
+    }
+
+    public void deleteToken(Token accessToken) {
+        tokenDao.remove(accessToken.getId());
     }
 }

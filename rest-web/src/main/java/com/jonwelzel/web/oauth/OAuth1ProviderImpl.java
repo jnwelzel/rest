@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 
 import com.jonwelzel.commons.entities.OAuth1Consumer;
 import com.jonwelzel.commons.entities.OAuth1Token;
+import com.jonwelzel.commons.entities.Token;
 import com.jonwelzel.ejb.annotations.Log;
 import com.jonwelzel.ejb.consumer.ConsumerBean;
 import com.jonwelzel.ejb.exceptions.checked.ApplicationException;
@@ -45,17 +46,17 @@ public class OAuth1ProviderImpl implements OAuth1Provider {
     }
 
     @Override
-    public OAuth1Token newRequestToken(String consumerKey, String callbackUrl, Map<String, List<String>> attributes) {
+    public Token newRequestToken(String consumerKey, String callbackUrl, Map<String, List<String>> attributes) {
         return tokenBean.newRequestToken(consumerKey, callbackUrl);
     }
 
     @Override
-    public OAuth1Token getRequestToken(String token) {
+    public Token getRequestToken(String token) {
         return tokenBean.findByToken(token);
     }
 
     @Override
-    public OAuth1Token newAccessToken(OAuth1Token requestToken, String verifier) {
+    public Token newAccessToken(OAuth1Token requestToken, String verifier) {
         try {
             return tokenBean.newAccessToken(requestToken, verifier);
         } catch (NoSuchAlgorithmException e) {
@@ -69,7 +70,7 @@ public class OAuth1ProviderImpl implements OAuth1Provider {
     }
 
     @Override
-    public OAuth1Token getAccessToken(String token) {
+    public Token getAccessToken(String token) {
         return tokenBean.findByToken(token);
     }
 
