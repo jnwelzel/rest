@@ -46,6 +46,12 @@ public class UserResource implements BaseResource<Long, User> {
     @Inject
     private UserBean userBean;
 
+    @Path("me")
+    @GET
+    public User profile(@Context SecurityContext securityContext) {
+        return (User) securityContext.getUserPrincipal();
+    }
+
     @Override
     @GET
     @PermitAll

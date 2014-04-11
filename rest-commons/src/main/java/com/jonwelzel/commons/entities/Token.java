@@ -82,21 +82,11 @@ public class Token extends AbstractEntity<Long> implements OAuth1Token {
         this.callbackUrl = callbackUrl;
     }
 
-    /**
-     * Returns string representing the token.
-     * 
-     * @return string representing the token
-     */
     @Override
     public Long getId() {
         return id;
     }
 
-    /**
-     * Returns consumer this token was issued for.
-     * 
-     * @return consumer this token was issued for.
-     */
     @Override
     public Consumer getConsumer() {
         return consumer;
@@ -110,11 +100,6 @@ public class Token extends AbstractEntity<Long> implements OAuth1Token {
         this.secret = secret;
     }
 
-    /**
-     * Returns the token secret.
-     * 
-     * @return token secret
-     */
     @Override
     public String getSecret() {
         return secret;
@@ -135,22 +120,6 @@ public class Token extends AbstractEntity<Long> implements OAuth1Token {
 
     public void setToken(String token) {
         this.token = token;
-    }
-
-    /**
-     * Returns a {@link User} object containing the name of the user the request containing this token is authorized to
-     * act on behalf of. When the oauth filter verifies the request with this token is properly authenticated, it
-     * injects this token into a security context which then delegates
-     * {@link javax.ws.rs.core.SecurityContext#getUserPrincipal()} to this method.
-     * 
-     * @return User corresponding to this token, or null if the token is not authorized
-     */
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     /**
@@ -176,10 +145,14 @@ public class Token extends AbstractEntity<Long> implements OAuth1Token {
         return null;
     }
 
+    public void setPrincipal(User user) {
+        this.user = user;
+    }
+
     @Override
     @JsonIgnore
     public Principal getPrincipal() {
-        return user == null ? consumer : user;
+        return user;
     }
 
     @Override

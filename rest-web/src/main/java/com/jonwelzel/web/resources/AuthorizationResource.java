@@ -2,6 +2,7 @@ package com.jonwelzel.web.resources;
 
 import static com.jonwelzel.web.oauth.OAuth1Configuration.AUTHORIZATION_ROOT_URL;
 
+import java.io.IOException;
 import java.net.URI;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -18,7 +19,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -38,6 +39,7 @@ import com.jonwelzel.ejb.oauth.TokenBean;
 import com.jonwelzel.ejb.session.HttpSessionBean;
 import com.jonwelzel.ejb.user.UserBean;
 import com.jonwelzel.web.oauth.OAuth1Exception;
+import com.jonwelzel.web.oauth.OAuth1Parameters;
 
 @Path(AUTHORIZATION_ROOT_URL)
 public class AuthorizationResource {
@@ -60,7 +62,7 @@ public class AuthorizationResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_FORM_URLENCODED)
     public Response authorize(@FormParam("oauthToken") String oauthToken, @FormParam("sessionToken") String sessionToken) {
         if (oauthToken == null || "".equals(oauthToken) || sessionToken == null || "".equals(sessionToken)) {
             throw new WebApplicationException(Response.status(Status.BAD_REQUEST)
@@ -79,7 +81,12 @@ public class AuthorizationResource {
         }
         User user = userBean.findUser(userId);
         try {
-            return Response.seeOther(tokenBean.authorize(authorized, user)).build();
+            Form resp = new Form();
+            resp.param(OAuth1Parameters.TOKEN, authorized.getToken());
+            resp.param(OAuth1Parameters.TOKEN_SECRET, authorized.getSecret());
+            return Response.seeOther(tokenBean.authorize(authorized, user))
+                    .header("oauth_token", authorized.getToken()).header("oauth_token_secret", authorized.getSecret())
+                    .entity(resp).build();
         } catch (NoSuchAlgorithmException e) {
             log.error(null, e);
             throw new WebApplicationException(Response.status(Status.INTERNAL_SERVER_ERROR)
@@ -104,19 +111,25 @@ public class AuthorizationResource {
             if (accessToken != null) {
                 // In this case the user has already granted permission to consumer
                 // Let's just go ahead and reuse this token
+                Token requestToken = tokenBean.findByToken(oauthToken);
+                accessToken.setToken(requestToken.getToken());
+                accessToken.setSecret(requestToken.getSecret());
+                tokenBean.deleteToken(requestToken);
                 final URI uri = tokenBean.authorize(accessToken, dbUser);
-                response.addHeader(HttpHeaders.LOCATION, uri.toString());
-                return new Viewable("/authorization/redirect", getRedirectModel(uri));
+                try {
+                    response.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+                    response.setCharacterEncoding("UTF-8");
+                    response.getWriter().append(
+                            "oauth_token=" + accessToken.getToken() + "&oauth_token_secret=" + accessToken.getSecret());
+                    response.sendRedirect(uri.toString());
+                } catch (IOException e) {
+                    log.error(null, e);
+                }
+                return null;
             }
             return new Viewable("/authorization/authorize", getAuthorizeModel(consumer, oauthToken, sessionToken,
                     dbUser));
         }
-    }
-
-    private Object getRedirectModel(URI callbackUrl) {
-        Map<String, String> model = new HashMap<>();
-        model.put("url", callbackUrl.toString());
-        return model;
     }
 
     private Object getLoginModel(Consumer consumer, String oauthToken) {

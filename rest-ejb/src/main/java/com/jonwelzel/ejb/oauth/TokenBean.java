@@ -72,7 +72,7 @@ public class TokenBean {
         // Add verfier and User to token, save it
         String verifier = SecurityUtils.generateSecureHex();
         authorized.setVerifier(verifier);
-        authorized.setUser(user);
+        authorized.setPrincipal(user);
         authorized = tokenDao.save(authorized);
         URI callback = URI.create(authorized.getCallbackUrl() + "?oauth_token=" + authorized.getToken()
                 + "&oauth_verifier=" + verifier);

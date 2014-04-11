@@ -8,6 +8,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
@@ -52,8 +53,8 @@ public class AccessTokenResource {
      */
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Token postAccessTokenRequest(@Context ContainerRequestContext requestContext, @Context Request req) {
+    @Produces(MediaType.APPLICATION_FORM_URLENCODED)
+    public Response postAccessTokenRequest(@Context ContainerRequestContext requestContext, @Context Request req) {
         boolean sigIsOk = false;
         OAuthServerRequest request = new OAuthServerRequest(requestContext);
         OAuth1Parameters params = new OAuth1Parameters();
@@ -102,8 +103,10 @@ public class AccessTokenResource {
         }
 
         // Preparing the response.
-        final Token token = new Token(at.getToken(), at.getSecret());
         log.info("New access token \"oauth_token\"=" + at.getToken() + " \"oauth_token_secret\"=" + at.getSecret());
-        return token;
+        Form resp = new Form();
+        resp.param(OAuth1Parameters.TOKEN, at.getToken());
+        resp.param(OAuth1Parameters.TOKEN_SECRET, at.getSecret());
+        return Response.ok(resp).build();
     }
 }
