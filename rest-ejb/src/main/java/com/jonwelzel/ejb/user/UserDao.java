@@ -46,4 +46,14 @@ public class UserDao extends AbstractJpaDao<Long, User> {
         }
     }
 
+    public User findByAlias(String alias) {
+        TypedQuery<User> query = getEntityManager().createNamedQuery("User.findByAlias", User.class);
+        query.setParameter("alias", alias);
+        try {
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
 }

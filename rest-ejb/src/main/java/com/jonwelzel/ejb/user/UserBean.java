@@ -42,6 +42,10 @@ public class UserBean {
         return userDao.find(id);
     }
 
+    public User findByAlias(String alias) {
+        return userDao.findByAlias(alias);
+    }
+
     public User createUser(User user) {
         log.info("Creating a new user");
         try {

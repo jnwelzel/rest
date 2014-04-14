@@ -35,7 +35,8 @@ import com.jonwelzel.commons.enumerations.RoleType;
 @Table(name = "APP_USER")
 @NamedQueries(value = {
         @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = :email"),
-        @NamedQuery(name = "User.findByToken", query = "SELECT u FROM User u JOIN u.tokens t WHERE t.token = :authToken") })
+        @NamedQuery(name = "User.findByToken", query = "SELECT u FROM User u JOIN u.tokens t WHERE t.token = :authToken"),
+        @NamedQuery(name = "User.findByAlias", query = "SELECT u FROM User u WHERE u.alias = :alias") })
 public class User extends AbstractEntity<Long> implements Principal {
 
     private static final long serialVersionUID = 1L;

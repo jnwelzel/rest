@@ -1,5 +1,6 @@
 package com.jonwelzel.commons.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -9,6 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 
@@ -16,6 +19,10 @@ import org.codehaus.jackson.annotate.JsonBackReference;
 import org.codehaus.jackson.annotate.JsonManagedReference;
 
 @Entity
+@NamedQueries({
+        @NamedQuery(name = "Post.findAllByAlias", query = "SELECT p FROM Post p JOIN p.user u WHERE u.alias = :alias"),
+        @NamedQuery(name = "Post.findAllByUser", query = "SELECT p FROM Post p JOIN p.user u WHERE u = :user"),
+        @NamedQuery(name = "Post.findByIdAndUser", query = "SELECT p FROM Post p JOIN p.user u WHERE u = :user AND p.id = :id") })
 public class Post extends AbstractEntity<Long> {
 
     private static final long serialVersionUID = 1L;
@@ -38,7 +45,7 @@ public class Post extends AbstractEntity<Long> {
 
     @OneToMany(orphanRemoval = true, mappedBy = "post", cascade = CascadeType.REMOVE)
     @JsonManagedReference(value = "post")
-    private List<Comment> comments;
+    private List<Comment> comments = new ArrayList<>();
 
     @Override
     public Long getId() {
@@ -64,6 +71,22 @@ public class Post extends AbstractEntity<Long> {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 
 }
