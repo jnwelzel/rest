@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -66,7 +67,11 @@ public class User extends AbstractEntity<Long> implements Principal {
     @ManyToMany(mappedBy = "users")
     private List<Company> companies;
 
-    @OneToMany(cascade = { CascadeType.REMOVE }, orphanRemoval = true, mappedBy = "user")
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true, mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonManagedReference(value = "author")
+    private List<Post> posts = new ArrayList<>();
+
+    @OneToMany(cascade = { CascadeType.REMOVE }, orphanRemoval = true, mappedBy = "user", fetch = FetchType.LAZY)
     @JsonManagedReference(value = "user")
     private List<Token> tokens = new ArrayList<>();
 
@@ -130,6 +135,14 @@ public class User extends AbstractEntity<Long> implements Principal {
 
     public void setCompanies(List<Company> companies) {
         this.companies = companies;
+    }
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
     }
 
     public List<Token> getTokens() {

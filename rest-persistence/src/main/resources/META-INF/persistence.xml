@@ -14,6 +14,8 @@
 	   	<class>com.jonwelzel.commons.entities.Consumer</class>
 	   	<class>com.jonwelzel.commons.entities.Company</class>
 	   	<class>com.jonwelzel.commons.entities.Token</class>
+	   	<class>com.jonwelzel.commons.entities.Post</class>
+	   	<class>com.jonwelzel.commons.entities.Comment</class>
 	</persistence-unit>
 
 </persistence>
