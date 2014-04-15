@@ -8,7 +8,10 @@
 	      	 <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/> 
 	      	 <property name="eclipselink.target-database" value="PostgreSQL" />
 	      	 <property name="eclipselink.logging.level" value="INFO" />
-	      	 <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/> 
+	      	 <property name="eclipselink.ddl-generation" value="create-tables"/> 
+	      	 <!-- 
+	      	 <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>
+	      	  -->
 	   	</properties> 
 	   	<class>com.jonwelzel.commons.entities.User</class>
 	   	<class>com.jonwelzel.commons.entities.Consumer</class>

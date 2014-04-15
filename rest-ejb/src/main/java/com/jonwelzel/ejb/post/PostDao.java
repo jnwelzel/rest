@@ -24,7 +24,7 @@ public class PostDao extends AbstractJpaDao<Long, Post> {
     }
 
     public List<Post> findAlByAlias(String alias) {
-        TypedQuery<Post> query = getEntityManager().createNamedQuery("User.findAllByAlias", Post.class);
+        TypedQuery<Post> query = getEntityManager().createNamedQuery("Post.findAllByAlias", Post.class);
         query.setParameter("alias", alias);
         try {
             return query.getResultList();
@@ -34,7 +34,7 @@ public class PostDao extends AbstractJpaDao<Long, Post> {
     }
 
     public List<Post> findAlByUser(User user) {
-        TypedQuery<Post> query = getEntityManager().createNamedQuery("User.findAllByUser", Post.class);
+        TypedQuery<Post> query = getEntityManager().createNamedQuery("Post.findAllByUser", Post.class);
         query.setParameter("user", user);
         try {
             return query.getResultList();
@@ -44,7 +44,7 @@ public class PostDao extends AbstractJpaDao<Long, Post> {
     }
 
     public Post findByIdAndUser(Long postId, User user) {
-        TypedQuery<Post> query = getEntityManager().createNamedQuery("User.findByIdAndUser", Post.class);
+        TypedQuery<Post> query = getEntityManager().createNamedQuery("Post.findByIdAndUser", Post.class);
         query.setParameter("id", postId);
         query.setParameter("user", user);
         try {

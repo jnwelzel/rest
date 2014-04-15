@@ -45,15 +45,4 @@ public class PostResource {
         return postBean.findByIdAndUser(postId, (User) sc.getUserPrincipal());
     }
 
-    @GET
-    @Path("{alias}")
-    public List<Post> userPosts(@PathParam("alias") String alias) {
-        return postBean.findAllByAlias(alias);
-    }
-
-    @GET
-    @Path("{alias}/{id}")
-    public Post getUserPost(@PathParam("alias") String alias, @PathParam("id") Long id) {
-        return postBean.find(id);
-    }
 }
